@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import { ApolloServer } from "@apollo/server";
 import { buildSubgraphSchema } from "@apollo/subgraph";
 import { expressMiddleware } from "@apollo/server/express4";
@@ -23,6 +24,13 @@ const server = new ApolloServer({
 await server.start();
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:4000",
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

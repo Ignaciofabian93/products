@@ -11,11 +11,8 @@ export const AuthTypeDefs = gql`
     isCompany: Boolean!
   }
 
-  extend type Query {
-    login(email: String!, password: String!): Session
-  }
-
   extend type Mutation {
+    login(email: String!, password: String!): Session
     register(name: String!, email: String!, password: String!): Session
     logout: Boolean
     updatePassword(password: String!): Session
