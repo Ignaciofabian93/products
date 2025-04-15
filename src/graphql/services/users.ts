@@ -1,4 +1,5 @@
 import prisma from "../../client/prisma";
+import { tokenVerify } from "../../middleware/auth";
 import { Context } from "../../types/context";
 import { User } from "../../types/user";
 
@@ -6,9 +7,9 @@ export const UserService = {
   getUsers: async ({ req, res }: Context) => {
     const users = await prisma.user.findMany();
     if (!users) {
-      return res.status(404).json({ message: { type: "error", text: "No users found" } });
+      return { error: "No existen usuarios" };
     }
-    return res.status(200).json({ users });
+    return users;
   },
   getUser: async ({ req, res }: Context) => {
     const { id } = req.params;
@@ -16,9 +17,27 @@ export const UserService = {
       where: { id },
     });
     if (!user) {
-      return res.status(404).json({ message: { type: "error", text: "User not found" } });
+      return { error: "Usuario no encontrado" };
     }
-    return res.status(200).json({ user });
+    return user;
+  },
+  getMe: async ({ token }: { token: string }, { req, res }: Context) => {
+    const id = await tokenVerify(token);
+    const user = await prisma.user.findUnique({
+      where: { id },
+    });
+    if (!user) {
+      return { error: "Usuario no encontrado" };
+    }
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      isCompany: user.isCompany,
+      createdAt: user.createdAt.toLocaleDateString(),
+      updatedAt: user.updatedAt.toLocaleDateString(),
+    };
   },
   createUser: async ({ name, email, password, isCompany }: User, { req, res }: Context) => {
     const user = await prisma.user.create({
@@ -32,9 +51,15 @@ export const UserService = {
       },
     });
     if (!user) {
-      return res.status(404).json({ message: { type: "error", text: "User not created" } });
     }
-    return res.status(200).json({ user });
+    return {
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      isCompany: user.isCompany,
+      createdAt: user.createdAt.toLocaleDateString(),
+      updatedAt: user.updatedAt.toLocaleDateString(),
+    };
   },
   updateUser: async ({ name, email, password, isCompany }: User, { req, res }: Context) => {
     const { id } = req.params;
@@ -49,18 +74,15 @@ export const UserService = {
       },
     });
     if (!user) {
-      return res.status(404).json({ message: { type: "error", text: "User not updated" } });
     }
-    return res.status(200).json({ user });
+    return user;
   },
-  deleteUser: async ({ req, res }: Context) => {
-    const { id } = req.params;
+  deleteUser: async ({ id }: { id: string }, { req, res }: Context) => {
     const user = await prisma.user.delete({
       where: { id },
     });
     if (!user) {
-      return res.status(404).json({ message: { type: "error", text: "User not deleted" } });
     }
-    return res.status(200).json({ user });
+    return user;
   },
 };

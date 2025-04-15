@@ -1,22 +1,15 @@
 import express from "express";
-import cors from "cors";
 import { ApolloServer } from "@apollo/server";
 import { buildSubgraphSchema } from "@apollo/subgraph";
 import { expressMiddleware } from "@apollo/server/express4";
-import { AuthTypeDefs } from "./graphql/auth/auth.schema";
-import { AuthResolver } from "./graphql/auth/auth.resolver";
-import { UserTypeDefs } from "./graphql/users/user.schema";
-import { UserResolver } from "./graphql/users/user.resolver";
+import { typeDefs } from "./graphql/schema";
+import { resolvers } from "./graphql/resolvers";
 
 const server = new ApolloServer({
   schema: buildSubgraphSchema([
     {
-      typeDefs: AuthTypeDefs,
-      resolvers: AuthResolver,
-    },
-    {
-      typeDefs: UserTypeDefs,
-      resolvers: UserResolver,
+      typeDefs,
+      resolvers,
     },
   ]),
 });
@@ -25,19 +18,16 @@ await server.start();
 
 const app = express();
 
-app.use(
-  cors({
-    origin: "http://localhost:4000",
-    credentials: true,
-  })
-);
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   "/graphql",
   expressMiddleware(server, {
-    context: async ({ req, res }) => ({ req, res }),
+    context: async ({ req, res }) => {
+      const auth = req.headers.authorization;
+      const token = auth?.startsWith("Bearer ") ? auth.split(" ")[1] : undefined;
+      return { req, res, token };
+    },
   })
 );
 
