@@ -32,7 +32,7 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-  res.send("Auth subgraph is running");
+  res.send("User's subgraph is running");
 });
 
 const PORT = 4001;

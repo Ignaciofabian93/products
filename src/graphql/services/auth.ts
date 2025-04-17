@@ -2,6 +2,8 @@ import prisma from "../../client/prisma";
 import jwt from "jsonwebtoken";
 import { hash, genSalt } from "bcrypt";
 import { Context } from "../../types/context";
+import { TokenValidation } from "../../middleware/tokenValidation";
+import { PasswordUpdate } from "../../types/user";
 
 type Register = {
   name: string;
@@ -11,7 +13,7 @@ type Register = {
 };
 
 export const AuthService = {
-  register: async ({ name, email, password, isCompany }: Register, { req, res }: Context) => {
+  register: async ({ name, email, password, isCompany }: Register) => {
     const checkIfExists = await prisma.user.findFirst({ where: { email } });
 
     if (checkIfExists) {
@@ -44,8 +46,9 @@ export const AuthService = {
       message: "Usuario registrado correctamente",
     };
   },
-  updatePassword: async (token: string, password: string, newPassword: string) => {
-    const { id } = jwt.verify(token, process.env.JWT_SECRET || "secret") as { id: string };
+  updatePassword: async ({ password, newPassword }: PasswordUpdate, { req, token }: Context) => {
+    const decodedToken = TokenValidation(token as string);
+    const { id } = req.params;
     // const checkPassword = await compare(password, verifyToken);
     const salt = await genSalt(10);
     const hashedPassword = await hash(newPassword, salt);

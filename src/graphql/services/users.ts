@@ -1,17 +1,21 @@
 import prisma from "../../client/prisma";
-import { tokenVerify } from "../../middleware/auth";
 import { Context } from "../../types/context";
 import { User } from "../../types/user";
+import { TokenValidation } from "../../middleware/tokenValidation";
 
 export const UserService = {
-  getUsers: async ({ req, res }: Context) => {
+  getUsers: async ({ token }: Context) => {
+    const decodedToken = TokenValidation(token as string);
+
     const users = await prisma.user.findMany();
     if (!users) {
       return { error: "No existen usuarios" };
     }
     return users;
   },
-  getUser: async ({ req, res }: Context) => {
+  getUser: async ({ req, token }: Context) => {
+    const decodedToken = TokenValidation(token as string);
+
     const { id } = req.params;
     const user = await prisma.user.findUnique({
       where: { id },
@@ -21,8 +25,9 @@ export const UserService = {
     }
     return user;
   },
-  getMe: async ({ token }: { token: string }, { req, res }: Context) => {
-    const id = await tokenVerify(token);
+  getMe: async ({ req, token }: Context) => {
+    const decodedToken = TokenValidation(token as string);
+    const { id } = req.params;
     const user = await prisma.user.findUnique({
       where: { id },
     });
@@ -39,7 +44,9 @@ export const UserService = {
       updatedAt: user.updatedAt.toLocaleDateString(),
     };
   },
-  createUser: async ({ name, email, password, isCompany }: User, { req, res }: Context) => {
+  createUser: async ({ name, email, password, isCompany }: User, { token }: Context) => {
+    const decodedToken = TokenValidation(token as string);
+
     const user = await prisma.user.create({
       data: {
         name,
@@ -61,7 +68,9 @@ export const UserService = {
       updatedAt: user.updatedAt.toLocaleDateString(),
     };
   },
-  updateUser: async ({ name, email, password, isCompany }: User, { req, res }: Context) => {
+  updateUser: async ({ name, email, password, isCompany }: User, { req, token }: Context) => {
+    const decodedToken = TokenValidation(token as string);
+
     const { id } = req.params;
     const user = await prisma.user.update({
       where: { id },
@@ -77,7 +86,9 @@ export const UserService = {
     }
     return user;
   },
-  deleteUser: async ({ id }: { id: string }, { req, res }: Context) => {
+  deleteUser: async ({ req, token }: Context) => {
+    const decodedToken = TokenValidation(token as string);
+    const { id } = req.params;
     const user = await prisma.user.delete({
       where: { id },
     });

@@ -7,3 +7,8 @@ export type User = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type PasswordUpdate = {
+  password: string;
+  newPassword: string;
+};
