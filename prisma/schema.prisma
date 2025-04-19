@@ -74,13 +74,14 @@ model Category {
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
+  id          String      @id @default(uuid())
   name        String
   description String
   price       Int
   hasOffer    Boolean
   offerPrice  Int
   stock       Int
+  images      String[]
   categoryId  Int
   userId      String
   category    Category @relation(fields: [categoryId], references: [id])

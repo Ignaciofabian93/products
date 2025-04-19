@@ -1,12 +1,10 @@
-import { AuthResolver } from "./auth";
-import { UserResolver } from "./users";
+import { ProductResolver } from "./products";
 
 export const resolvers = {
   Query: {
-    ...UserResolver.Query,
+    ...ProductResolver.Query,
   },
   Mutation: {
-    ...AuthResolver.Mutation,
-    ...UserResolver.Mutation,
+    ...ProductResolver.Mutation,
   },
 };

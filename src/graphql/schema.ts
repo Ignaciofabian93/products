@@ -22,5 +22,30 @@ export const typeDefs = gql`
   }
 
   extend type Mutation {
+    stockControl(id: ID, quantity: Int, operation: String): Int
+    addProduct(
+      name: String!
+      description: String!
+      price: Float!
+      hasOffer: Boolean!
+      offerPrice: Float
+      stock: Int!
+      images: String!
+      categoryId: Int!
+      userId: Int!
+    ): Product
+    updateProduct(
+      id: ID!
+      name: String
+      description: String
+      price: Float
+      hasOffer: Boolean
+      offerPrice: Float
+      stock: Int
+      images: String
+      categoryId: Int
+      userId: Int
+    ): Product
+    deleteProduct(id: ID!): Product
   }
 `;
