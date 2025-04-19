@@ -28,15 +28,16 @@ app.use(
       const token = auth?.startsWith("Bearer ") ? auth.split(" ")[1] : undefined;
       return { req, res, token };
     },
-  })
+  }),
 );
 
 app.get("/", (req, res) => {
-  res.send("User's subgraph is running");
+  res.send("Product's subgraph is running");
 });
 
-const PORT = 4001;
+const PORT = 4002;
 
 app.listen(PORT, () => {
-  console.log(`User's subgraph is running on port ${PORT}`);
+  // eslint-disable-next-line no-console
+  console.log(`Product's subgraph is running on port ${PORT}`);
 });

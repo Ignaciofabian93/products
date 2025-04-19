@@ -1,9 +1,8 @@
 import prisma from "../../client/prisma";
-import jwt from "jsonwebtoken";
-import { hash, genSalt } from "bcrypt";
-import { Context } from "../../types/context";
+import { hash, genSalt, compare } from "bcrypt";
+import { type Context } from "../../types/context";
 import { TokenValidation } from "../../middleware/tokenValidation";
-import { PasswordUpdate } from "../../types/user";
+import { type PasswordUpdate } from "../../types/user";
 
 type Register = {
   name: string;
@@ -46,15 +45,24 @@ export const AuthService = {
       message: "Usuario registrado correctamente",
     };
   },
-  updatePassword: async ({ password, newPassword }: PasswordUpdate, { req, token }: Context) => {
+  updatePassword: async ({ password, newPassword }: PasswordUpdate, { token }: Context) => {
     const decodedToken = TokenValidation(token as string);
-    const { id } = req.params;
-    // const checkPassword = await compare(password, verifyToken);
-    const salt = await genSalt(10);
-    const hashedPassword = await hash(newPassword, salt);
-    return await prisma.user.update({
-      where: { id },
-      data: { password: hashedPassword },
-    });
+    if (decodedToken) {
+      const id = decodedToken as string;
+      const user = await prisma.user.findUnique({ where: { id } });
+      if (!user) {
+        return new Error("El usuario no existe");
+      }
+      const checkPassword = await compare(password, user.password);
+      if (!checkPassword) {
+        throw new Error("La contraseña es incorrecta");
+      }
+      const salt = await genSalt(10);
+      const hashedPassword = await hash(newPassword, salt);
+      return await prisma.user.update({
+        where: { id },
+        data: { password: hashedPassword },
+      });
+    }
   },
 };
