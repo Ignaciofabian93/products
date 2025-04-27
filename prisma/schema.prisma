@@ -27,12 +27,17 @@ model User {
   email          String         @unique
   password       String
   isCompany      Boolean
+  phone          String         @default("")
+  address        String         @default("")
+  county         String         @default("")
+  city           String         @default("")
+  region         String         @default("")
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
   products       Product[]
   stories        Story[]
   userCategoryId Int?
-  UserCategory   UserCategory?  @relation(fields: [userCategoryId], references: [id])
+  userCategory   UserCategory?  @relation(fields: [userCategoryId], references: [id])
   transactions   Transactions[] 
 }
 
@@ -74,14 +79,14 @@ model Category {
 }
 
 model Product {
-  id          String      @id @default(uuid())
+  id          Int      @id @default(autoincrement())
   name        String
   description String
   price       Int
+  images      String[]
   hasOffer    Boolean
   offerPrice  Int
   stock       Int
-  images      String[]
   categoryId  Int
   userId      String
   category    Category @relation(fields: [categoryId], references: [id])

@@ -8,5 +8,5 @@ export type Product = {
   stock: number;
   images: string[];
   categoryId: number;
-  userId: number;
+  userId: string;
 };

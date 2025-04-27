@@ -3,6 +3,16 @@ import gql from "graphql-tag";
 export const typeDefs = gql`
   extend schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "@shareable"])
 
+  extend type User @key(fields: "id") {
+    id: ID! @federation__external
+  }
+
+  type Category {
+    id: ID!
+    name: String!
+    products: [Product]
+  }
+
   type Product {
     id: ID!
     name: String!
@@ -10,10 +20,12 @@ export const typeDefs = gql`
     price: Float!
     hasOffer: Boolean!
     offerPrice: Float
-    images: String[]!
+    images: [String]
     stock: Int!
     categoryId: Int!
-    userId: Int!
+    userId: String!
+    category: Category
+    user: User
   }
 
   extend type Query {
@@ -30,9 +42,9 @@ export const typeDefs = gql`
       hasOffer: Boolean!
       offerPrice: Float
       stock: Int!
-      images: String!
+      images: [String]
       categoryId: Int!
-      userId: Int!
+      userId: String!
     ): Product
     updateProduct(
       id: ID!
@@ -42,9 +54,9 @@ export const typeDefs = gql`
       hasOffer: Boolean
       offerPrice: Float
       stock: Int
-      images: String
+      images: [String]
       categoryId: Int
-      userId: Int
+      userId: String
     ): Product
     deleteProduct(id: ID!): Product
   }
