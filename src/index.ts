@@ -35,7 +35,7 @@ app.get("/", (req, res) => {
   res.send("Product's subgraph is running");
 });
 
-const PORT = 4002;
+const PORT = process.env.PORT || 4002;
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
