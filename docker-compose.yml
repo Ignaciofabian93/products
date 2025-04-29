@@ -7,9 +7,7 @@ services:
     container_name: products_subgraph
     ports:
       - "4002:4002"
-    networks:
-      - ekoru-network
 
 networks:
   ekoru-network:
-    driver: bridge
+    external: true
