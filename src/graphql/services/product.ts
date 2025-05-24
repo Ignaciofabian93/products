@@ -5,18 +5,92 @@ import { type Context } from "../../types/context";
 import { Product } from "../../types/product";
 
 export const ProductService = {
+  getDepartments: async () => {
+    const departments = await prisma.department.findMany();
+
+    if (!departments.length) {
+      return new ErrorService.NotFoundError("No se encontraron departamentos");
+    }
+
+    return departments;
+  },
+  getDepartment: async ({ id }: { id: number }) => {
+    if (!id) {
+      return new ErrorService.BadRequestError("No es posible encontrar el departamento");
+    }
+
+    const department = await prisma.department.findUnique({
+      where: { id: Number(id) },
+      include: {
+        departmentCategories: true,
+      },
+    });
+
+    return department;
+  },
+  getDepartmentCategories: async () => {
+    const departmentCategories = await prisma.departmentCategory.findMany();
+
+    if (!departmentCategories.length) {
+      return new ErrorService.NotFoundError("No se encontraron categorías");
+    }
+
+    return departmentCategories;
+  },
+  getDepartmentCategory: async ({ id }: { id: number }) => {
+    if (!id) {
+      return new ErrorService.BadRequestError("No es posible encontrar la categoría");
+    }
+
+    const departmentCategory = await prisma.departmentCategory.findUnique({
+      where: { id: Number(id) },
+      include: {
+        department: true,
+        productCategories: true,
+      },
+    });
+
+    if (!departmentCategory) {
+      return new ErrorService.NotFoundError("No se encontró la categoría");
+    }
+
+    return departmentCategory;
+  },
+  getProductCategories: async () => {
+    const productCategories = await prisma.productCategory.findMany();
+
+    if (!productCategories.length) {
+      return new ErrorService.NotFoundError("No se encontraron categorías");
+    }
+
+    return productCategories;
+  },
+  getProductCategory: async ({ id }: { id: number }) => {
+    if (!id) {
+      return new ErrorService.BadRequestError("No es posible encontrar la categoría");
+    }
+
+    const productCategory = await prisma.productCategory.findUnique({
+      where: { id: Number(id) },
+      include: {
+        departmentCategory: true,
+        products: true,
+      },
+    });
+
+    if (!productCategory) {
+      return new ErrorService.NotFoundError("No se encontró la categoría");
+    }
+
+    return productCategory;
+  },
   getProducts: async ({ token }: Context) => {
     const userId = TokenValidation(token as string) as string;
     if (!userId) {
       return new ErrorService.UnAuthorizedError("No autorizado");
     }
 
-    const products = await prisma.product.findMany({
-      include: {
-        category: true,
-        user: true,
-      },
-    });
+    const products = await prisma.product.findMany({});
 
     if (!products) {
       return new ErrorService.NotFoundError("No se encontraron productos");
@@ -33,10 +107,6 @@ export const ProductService = {
 
     const product = await prisma.product.findUnique({
       where: { id: Number(id) },
-      include: {
-        category: true,
-        user: true,
-      },
     });
 
     if (!product) {
@@ -46,7 +116,18 @@ export const ProductService = {
     return product;
   },
   addProduct: async (
-    { name, description, price, hasOffer, offerPrice, stock, images, categoryId, userId }: Omit<Product, "id">,
+    {
+      name,
+      description,
+      price,
+      hasOffer,
+      offerPrice,
+      stock,
+      images,
+      userId,
+      productCategoryId,
+      size,
+    }: Omit<Product, "id">,
     { token }: Context,
   ) => {
     const userIdToken = TokenValidation(token as string) as string;
@@ -64,8 +145,9 @@ export const ProductService = {
         offerPrice,
         stock,
         images,
-        categoryId,
         userId,
+        productCategoryId,
+        size,
       },
     });
 
@@ -76,7 +158,7 @@ export const ProductService = {
     return product;
   },
   updateProduct: async (
-    { id, name, description, price, hasOffer, offerPrice, stock, images, categoryId, userId }: Product,
+    { id, name, description, price, hasOffer, offerPrice, stock, images, productCategoryId, size, userId }: Product,
     { token }: Context,
   ) => {
     const userIdToken = TokenValidation(token as string) as string;
@@ -95,8 +177,9 @@ export const ProductService = {
         offerPrice,
         stock,
         images,
-        categoryId,
         userId,
+        productCategoryId,
+        size,
       },
     });
 

@@ -21,24 +21,64 @@ model Session {
   isCompany Boolean
 }
 
+model Country {
+  id      Int      @id @default(autoincrement())
+  country String
+  regions Region[]
+  users   User[]
+}
+
+model Region {
+  id        Int     @id @default(autoincrement())
+  region    String
+  countryId Int
+  country   Country @relation(fields: [countryId], references: [id])
+  city      City[]
+  users     User[]
+}
+
+model City {
+  id       Int      @id @default(autoincrement())
+  city     String
+  regionId Int
+  region   Region   @relation(fields: [regionId], references: [id])
+  county   County[]
+  users    User[]
+}
+
+model County {
+  id     Int    @id @default(autoincrement())
+  county String
+  cityId Int
+  city   City   @relation(fields: [cityId], references: [id])
+  users  User[]
+}
+
 model User {
   id             String         @id @default(uuid())
   name           String
+  surnames       String
   email          String         @unique
   password       String
   isCompany      Boolean
   phone          String         @default("")
   address        String         @default("")
-  county         String         @default("")
-  city           String         @default("")
-  region         String         @default("")
+  countyId       Int            @default(268)
+  cityId         Int            @default(40)
+  regionId       Int            @default(13)
+  countryId      Int            @default(1)
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
+  county         County         @relation(fields: [countyId], references: [id])
+  city           City           @relation(fields: [cityId], references: [id])
+  region         Region         @relation(fields: [regionId], references: [id])
+  country        Country        @relation(fields: [countryId], references: [id])
   products       Product[]
   stories        Story[]
+  points         Int            @default(0)
   userCategoryId Int?
   userCategory   UserCategory?  @relation(fields: [userCategoryId], references: [id])
-  transactions   Transactions[] 
+  transactions   Transactions[]
 }
 
 model TransactionType {
@@ -58,6 +98,7 @@ model Transactions {
 model UserCategory {
   id                     Int    @id @default(autoincrement())
   name                   String
+  level                  Int
   categoryDiscountAmount Int
   pointsThreshold        Int
   users                  User[]
@@ -72,23 +113,40 @@ model Story {
   user        User     @relation(fields: [userId], references: [id])
 }
 
-model Category {
-  id       Int       @id @default(autoincrement())
-  name     String
-  products Product[]
+model Product {
+  id                Int             @id @default(autoincrement())
+  name              String
+  description       String
+  price             Int
+  images            String[]
+  hasOffer          Boolean
+  offerPrice        Int
+  stock             Int
+  size              String          
+  productCategoryId Int
+  userId            String
+  productCategory   ProductCategory @relation(fields: [productCategoryId], references: [id])
+  user              User            @relation(fields: [userId], references: [id])
 }
 
-model Product {
-  id          Int      @id @default(autoincrement())
-  name        String
-  description String
-  price       Int
-  images      String[]
-  hasOffer    Boolean
-  offerPrice  Int
-  stock       Int
-  categoryId  Int
-  userId      String
-  category    Category @relation(fields: [categoryId], references: [id])
-  user        User     @relation(fields: [userId], references: [id])
+model ProductCategory {
+  id                   Int                @id @default(autoincrement())
+  productCategory      String
+  departmentCategoryId Int
+  departmentCategory   DepartmentCategory @relation(fields: [departmentCategoryId], references: [id])
+  products             Product[]
+}
+
+model DepartmentCategory {
+  id                 Int               @id @default(autoincrement())
+  departmentCategory String
+  departmentId       Int
+  department         Department        @relation(fields: [departmentId], references: [id])
+  productCategories  ProductCategory[]
+}
+
+model Department {
+  id                   Int                  @id @default(autoincrement())
+  department           String
+  departmentCategories DepartmentCategory[]
 }

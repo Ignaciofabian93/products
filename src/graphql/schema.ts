@@ -7,10 +7,26 @@ export const typeDefs = gql`
     id: ID! @federation__external
   }
 
-  type Category {
+  type ProductCategory {
     id: ID!
-    name: String!
+    productCategory: String!
     products: [Product]
+    departmentCategoryId: Int!
+    departmentCategory: DepartmentCategory
+  }
+
+  type DepartmentCategory {
+    id: ID!
+    departmentCategory: String!
+    departmentId: Int!
+    department: Department
+    productCategories: [ProductCategory]
+  }
+
+  type Department {
+    id: ID!
+    department: String!
+    departmentCategories: [DepartmentCategory]
   }
 
   type Product {
@@ -18,17 +34,24 @@ export const typeDefs = gql`
     name: String!
     description: String!
     price: Float!
+    images: [String]
     hasOffer: Boolean!
     offerPrice: Float
-    images: [String]
     stock: Int!
-    categoryId: Int!
+    size: String!
+    productCategoryId: Int!
+    productCategory: ProductCategory
     userId: String!
-    category: Category
     user: User
   }
 
   extend type Query {
+    departments: [Department]
+    department(id: ID!): Department
+    departmentCategories: [DepartmentCategory]
+    departmentCategory(id: ID!): DepartmentCategory
+    productCategories: [ProductCategory]
+    productCategory(id: ID!): ProductCategory
     products: [Product]
     product(id: ID!): Product
   }
@@ -39,11 +62,12 @@ export const typeDefs = gql`
       name: String!
       description: String!
       price: Float!
+      images: [String]
       hasOffer: Boolean!
       offerPrice: Float
       stock: Int!
-      images: [String]
-      categoryId: Int!
+      size: String
+      productCategoryId: Int!
       userId: String!
     ): Product
     updateProduct(
@@ -51,11 +75,12 @@ export const typeDefs = gql`
       name: String
       description: String
       price: Float
+      images: [String]
       hasOffer: Boolean
       offerPrice: Float
       stock: Int
-      images: [String]
-      categoryId: Int
+      size: String
+      productCategoryId: Int
       userId: String
     ): Product
     deleteProduct(id: ID!): Product
