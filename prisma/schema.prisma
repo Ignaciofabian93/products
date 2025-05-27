@@ -79,10 +79,13 @@ model County {
 
 model User {
   id              String           @id @default(uuid())
-  name            String
-  surnames        String
+  name            String?
+  surnames        String?
   email           String           @unique
+  businessName    String?          @unique
   password        String
+  profileImage    String?
+  birthday        DateTime         @default(now())
   phone           String           @default("")
   address         String           @default("")
   isCompany       Boolean          @default(false)
@@ -90,10 +93,10 @@ model User {
   points          Int              @default(0)
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
-  regionId        Int
-  countyId        Int
-  cityId          Int
-  countryId       Int
+  regionId        Int              @default(13)
+  countyId        Int              @default(268)
+  cityId          Int              @default(40)
+  countryId       Int              @default(1)
   country         Country          @relation(fields: [countryId], references: [id])
   region          Region           @relation(fields: [regionId], references: [id])
   city            City             @relation(fields: [cityId], references: [id])
