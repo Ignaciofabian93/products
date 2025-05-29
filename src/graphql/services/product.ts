@@ -6,7 +6,13 @@ import { Product } from "../../types/product";
 
 export const ProductService = {
   getDepartments: async () => {
-    const departments = await prisma.department.findMany();
+    const departments = await prisma.department.findMany({
+      select: {
+        id: true,
+        department: true,
+        departmentCategories: true,
+      },
+    });
 
     if (!departments.length) {
       return new ErrorService.NotFoundError("No se encontraron departamentos");
@@ -84,12 +90,7 @@ export const ProductService = {
 
     return productCategory;
   },
-  getProducts: async ({ token }: Context) => {
-    const userId = TokenValidation(token as string) as string;
-    if (!userId) {
-      return new ErrorService.UnAuthorizedError("No autorizado");
-    }
-
+  getProducts: async () => {
     const products = await prisma.product.findMany({});
 
     if (!products) {
@@ -98,13 +99,7 @@ export const ProductService = {
 
     return products;
   },
-  getProduct: async ({ id }: { id: number }, { token }: Context) => {
-    const userId = TokenValidation(token as string) as string;
-
-    if (!userId) {
-      return new ErrorService.UnAuthorizedError("No autorizado");
-    }
-
+  getProduct: async ({ id }: { id: number }) => {
     const product = await prisma.product.findUnique({
       where: { id: Number(id) },
     });

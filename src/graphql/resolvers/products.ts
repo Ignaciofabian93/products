@@ -4,15 +4,14 @@ import { ProductService } from "../services/product";
 
 export const ProductResolver = {
   Query: {
-    departments: (_parent: unknown, _args: unknown, context: Context) => ProductService.getProducts(context),
-    department: (_parent: unknown, _args: { id: number }, context: Context) => ProductService.getProducts(context),
-    departmentCategories: (_parent: unknown, _args: unknown, context: Context) => ProductService.getProducts(context),
-    departmentCategory: (_parent: unknown, _args: { id: number }, context: Context) =>
-      ProductService.getProducts(context),
-    productCategories: (_parent: unknown, _args: unknown, context: Context) => ProductService.getProducts(context),
-    productCategory: (_parent: unknown, _args: { id: number }, context: Context) => ProductService.getProducts(context),
-    products: (_parent: unknown, _args: unknown, context: Context) => ProductService.getProducts(context),
-    product: (_parent: unknown, _args: { id: number }, context: Context) => ProductService.getProduct(_args, context),
+    departments: (_parent: unknown, _args: unknown) => ProductService.getDepartments(),
+    department: (_parent: unknown, _args: { id: number }) => ProductService.getDepartment(_args),
+    departmentCategories: (_parent: unknown, _args: unknown) => ProductService.getDepartmentCategories(),
+    departmentCategory: (_parent: unknown, _args: { id: number }) => ProductService.getDepartmentCategory(_args),
+    productCategories: (_parent: unknown, _args: unknown) => ProductService.getProductCategories(),
+    productCategory: (_parent: unknown, _args: { id: number }) => ProductService.getProductCategory(_args),
+    products: (_parent: unknown, _args: unknown) => ProductService.getProducts(),
+    product: (_parent: unknown, _args: { id: number }) => ProductService.getProduct(_args),
   },
   Mutation: {
     addProduct: (_parent: unknown, _args: Omit<Product, "id">, context: Context) =>
