@@ -5,91 +5,6 @@ import { type Context } from "../../types/context";
 import { Product } from "../../types/product";
 
 export const ProductService = {
-  getDepartments: async () => {
-    const departments = await prisma.department.findMany({
-      select: {
-        id: true,
-        department: true,
-        departmentCategories: true,
-      },
-    });
-
-    if (!departments.length) {
-      return new ErrorService.NotFoundError("No se encontraron departamentos");
-    }
-
-    return departments;
-  },
-  getDepartment: async ({ id }: { id: number }) => {
-    if (!id) {
-      return new ErrorService.BadRequestError("No es posible encontrar el departamento");
-    }
-
-    const department = await prisma.department.findUnique({
-      where: { id: Number(id) },
-      include: {
-        departmentCategories: true,
-      },
-    });
-
-    return department;
-  },
-  getDepartmentCategories: async () => {
-    const departmentCategories = await prisma.departmentCategory.findMany();
-
-    if (!departmentCategories.length) {
-      return new ErrorService.NotFoundError("No se encontraron categorías");
-    }
-
-    return departmentCategories;
-  },
-  getDepartmentCategory: async ({ id }: { id: number }) => {
-    if (!id) {
-      return new ErrorService.BadRequestError("No es posible encontrar la categoría");
-    }
-
-    const departmentCategory = await prisma.departmentCategory.findUnique({
-      where: { id: Number(id) },
-      include: {
-        department: true,
-        productCategories: true,
-      },
-    });
-
-    if (!departmentCategory) {
-      return new ErrorService.NotFoundError("No se encontró la categoría");
-    }
-
-    return departmentCategory;
-  },
-  getProductCategories: async () => {
-    const productCategories = await prisma.productCategory.findMany();
-
-    if (!productCategories.length) {
-      return new ErrorService.NotFoundError("No se encontraron categorías");
-    }
-
-    return productCategories;
-  },
-  getProductCategory: async ({ id }: { id: number }) => {
-    if (!id) {
-      return new ErrorService.BadRequestError("No es posible encontrar la categoría");
-    }
-
-    const productCategory = await prisma.productCategory.findUnique({
-      where: { id: Number(id) },
-      include: {
-        departmentCategory: true,
-        products: true,
-      },
-    });
-
-    if (!productCategory) {
-      return new ErrorService.NotFoundError("No se encontró la categoría");
-    }
-
-    return productCategory;
-  },
   getProducts: async () => {
     const products = await prisma.product.findMany({});
 
@@ -110,47 +25,53 @@ export const ProductService = {
 
     return product;
   },
-  addProduct: async (
-    {
-      name,
-      description,
-      price,
-      hasOffer,
-      offerPrice,
-      stock,
-      images,
-      userId,
-      productCategoryId,
-      size,
-    }: Omit<Product, "id">,
-    { token }: Context,
-  ) => {
-    const userIdToken = TokenValidation(token as string) as string;
-
-    if (!userIdToken) {
-      return new ErrorService.UnAuthorizedError("No autorizado");
-    }
-
-    const product = await prisma.product.create({
-      data: {
-        name,
-        description,
-        price,
-        hasOffer,
-        offerPrice,
-        stock,
-        images,
-        userId,
-        productCategoryId,
-        size,
-      },
+  getProductsByOwner: async ({ id }: { id: string }) => {
+    const products = await prisma.product.findMany({
+      where: { userId: id },
     });
 
-    if (!product) {
-      return new ErrorService.InternalServerError("Error al crear el producto");
+    if (!products) {
+      return new ErrorService.NotFoundError("No se encontraron productos");
     }
+    console.log("PROD:; ", products);
 
-    return product;
+    return products;
+  },
+  addProduct: async ({
+    name,
+    description,
+    price,
+    hasOffer,
+    offerPrice,
+    stock,
+    images,
+    userId,
+    productCategoryId,
+    size,
+  }: Omit<Product, "id">) => {
+    try {
+      const product = await prisma.product.create({
+        data: {
+          name,
+          description,
+          price,
+          hasOffer,
+          offerPrice,
+          stock,
+          images,
+          userId,
+          productCategoryId,
+          size: size || "regular",
+        },
+      });
+      if (!product) {
+        return new ErrorService.InternalServerError("Error al crear el producto");
+      }
+
+      return product;
+    } catch (error) {
+      console.log("ERROR!!:: ", error);
+    }
   },
   updateProduct: async (
     { id, name, description, price, hasOffer, offerPrice, stock, images, productCategoryId, size, userId }: Product,

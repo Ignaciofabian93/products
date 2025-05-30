@@ -12,31 +12,27 @@ export const typeDefs = gql`
     productCategory: String!
     products: [Product]
     departmentCategoryId: Int!
-    departmentCategory: DepartmentCategory
   }
 
   type DepartmentCategory {
     id: ID!
     departmentCategory: String!
     departmentId: Int!
-    department: Department
-    productCategories: [ProductCategory]
   }
 
   type Department {
     id: ID!
     department: String!
-    departmentCategories: [DepartmentCategory]
   }
 
   type Product {
     id: ID!
     name: String!
     description: String!
-    price: Float!
+    price: Int!
     images: [String]
     hasOffer: Boolean!
-    offerPrice: Float
+    offerPrice: Int
     stock: Int!
     size: String!
     productCategoryId: Int!
@@ -48,12 +44,19 @@ export const typeDefs = gql`
   extend type Query {
     departments: [Department]
     department(id: ID!): Department
+
+    departmentCategoriesByDepartment(id: ID!): [DepartmentCategory]
     departmentCategories: [DepartmentCategory]
     departmentCategory(id: ID!): DepartmentCategory
+
+    productCategoriesByDepartmentCategory(id: ID!): [ProductCategory]
     productCategories: [ProductCategory]
     productCategory(id: ID!): ProductCategory
+
+    productsByProductCategory(id: ID!): [Product]
     products: [Product]
     product(id: ID!): Product
+    productsByOwner(id: ID!): [Product]
   }
 
   extend type Mutation {
@@ -61,10 +64,10 @@ export const typeDefs = gql`
     addProduct(
       name: String!
       description: String!
-      price: Float!
+      price: Int!
       images: [String]
-      hasOffer: Boolean!
-      offerPrice: Float
+      hasOffer: Boolean
+      offerPrice: Int
       stock: Int!
       size: String
       productCategoryId: Int!
@@ -74,10 +77,10 @@ export const typeDefs = gql`
       id: ID!
       name: String
       description: String
-      price: Float
+      price: Int
       images: [String]
       hasOffer: Boolean
-      offerPrice: Float
+      offerPrice: Int
       stock: Int
       size: String
       productCategoryId: Int
