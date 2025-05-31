@@ -18,7 +18,7 @@ export const ProductResolver = {
 
     productCategoriesByDepartmentCategory: (_parent: unknown, _args: { id: number }) =>
       ProductCategoriesService.getProductCategoriesByDepartmentCategory(_args),
-    productCategories: (_parent: unknown, _args: unknown) => ProductCategoriesService.getProductCategories,
+    productCategories: (_parent: unknown, _args: unknown) => ProductCategoriesService.getProductCategories(),
     productCategory: (_parent: unknown, _args: { id: number }) => ProductCategoriesService.getProductCategory(_args),
 
     products: (_parent: unknown, _args: unknown) => ProductService.getProducts(),
@@ -30,7 +30,7 @@ export const ProductResolver = {
     updateProduct: (_parent: unknown, _args: Product, context: Context) => ProductService.updateProduct(_args, context),
     deleteProduct: (_parent: unknown, _args: { id: number }, context: Context) =>
       ProductService.deleteProduct(_args, context),
-    stockControl: (_parent: unknown, _args: { id: number; operation: string; amount: number }, context: Context) =>
+    stockControl: (_parent: unknown, _args: { id: number; quantity: number; operation: string }, context: Context) =>
       ProductService.stockControl(_args, context),
   },
   Product: {

@@ -123,7 +123,7 @@ export const ProductService = {
     return product;
   },
   stockControl: async (
-    { id, operation, amount }: { id: number; operation: string; amount: number },
+    { id, operation, quantity }: { id: number; quantity: number; operation: string },
     { token }: Context,
   ) => {
     const userId = TokenValidation(token as string) as string;
@@ -144,20 +144,20 @@ export const ProductService = {
       const updatedProduct = await prisma.product.update({
         where: { id: Number(id) },
         data: {
-          stock: product.stock + amount,
+          stock: product.stock + quantity,
         },
       });
 
       return updatedProduct;
     } else if (operation === "subtract") {
-      if (product.stock < amount) {
+      if (product.stock < quantity) {
         return new ErrorService.BadRequestError("No hay suficiente stock");
       }
 
       const updatedProduct = await prisma.product.update({
         where: { id: Number(id) },
         data: {
-          stock: product.stock - amount,
+          stock: product.stock - quantity,
         },
       });
 
