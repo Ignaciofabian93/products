@@ -18,7 +18,6 @@ export const DepartmentService = {
   },
   getDepartment: async ({ id }: { id: number }) => {
     const parsedId = Number(id);
-
     const department = await prisma.department.findUnique({
       where: { id: parsedId },
       select: {

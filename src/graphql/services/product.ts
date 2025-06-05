@@ -1,7 +1,5 @@
 import prisma from "../../client/prisma";
 import { ErrorService } from "../../errors/errors";
-import { TokenValidation } from "../../middleware/tokenValidation";
-import { type Context } from "../../types/context";
 import { Product } from "../../types/product";
 
 export const ProductService = {
@@ -33,7 +31,6 @@ export const ProductService = {
     if (!products) {
       return new ErrorService.NotFoundError("No se encontraron productos");
     }
-    console.log("PROD:; ", products);
 
     return products;
   },
@@ -73,16 +70,19 @@ export const ProductService = {
       console.log("ERROR!!:: ", error);
     }
   },
-  updateProduct: async (
-    { id, name, description, price, hasOffer, offerPrice, stock, images, productCategoryId, size, userId }: Product,
-    { token }: Context,
-  ) => {
-    const userIdToken = TokenValidation(token as string) as string;
-
-    if (!userIdToken) {
-      return new ErrorService.UnAuthorizedError("No autorizado");
-    }
-
+  updateProduct: async ({
+    id,
+    name,
+    description,
+    price,
+    hasOffer,
+    offerPrice,
+    stock,
+    images,
+    productCategoryId,
+    size,
+    userId,
+  }: Product) => {
     const product = await prisma.product.update({
       where: { id: Number(id) },
       data: {
@@ -105,13 +105,7 @@ export const ProductService = {
 
     return product;
   },
-  deleteProduct: async ({ id }: { id: number }, { token }: Context) => {
-    const userId = TokenValidation(token as string) as string;
-
-    if (!userId) {
-      return new ErrorService.UnAuthorizedError("No autorizado");
-    }
-
+  deleteProduct: async ({ id }: { id: number }) => {
     const product = await prisma.product.delete({
       where: { id: Number(id) },
     });
@@ -122,16 +116,7 @@ export const ProductService = {
 
     return product;
   },
-  stockControl: async (
-    { id, operation, quantity }: { id: number; quantity: number; operation: string },
-    { token }: Context,
-  ) => {
-    const userId = TokenValidation(token as string) as string;
-
-    if (!userId) {
-      return new ErrorService.UnAuthorizedError("No autorizado");
-    }
-
+  stockControl: async ({ id, operation, quantity }: { id: number; quantity: number; operation: string }) => {
     const product = await prisma.product.findUnique({
       where: { id: Number(id) },
     });

@@ -1,4 +1,3 @@
-import { Context } from "../../types/context";
 import { type Product } from "../../types/product";
 import { DepartmentCategoriesService } from "../services/departmentCategories";
 import { DepartmentService } from "../services/departments";
@@ -27,15 +26,21 @@ export const ProductResolver = {
   },
   Mutation: {
     addProduct: (_parent: unknown, _args: Omit<Product, "id">) => ProductService.addProduct(_args),
-    updateProduct: (_parent: unknown, _args: Product, context: Context) => ProductService.updateProduct(_args, context),
-    deleteProduct: (_parent: unknown, _args: { id: number }, context: Context) =>
-      ProductService.deleteProduct(_args, context),
-    stockControl: (_parent: unknown, _args: { id: number; quantity: number; operation: string }, context: Context) =>
-      ProductService.stockControl(_args, context),
+    updateProduct: (_parent: unknown, _args: Product) => ProductService.updateProduct(_args),
+    deleteProduct: (_parent: unknown, _args: { id: number }) => ProductService.deleteProduct(_args),
+    stockControl: (_parent: unknown, _args: { id: number; quantity: number; operation: string }) =>
+      ProductService.stockControl(_args),
   },
   Product: {
-    user: (product: Product) => {
-      return { __typename: "User", id: product.userId };
-    },
+    __resolveReference: (reference: { id: number }) => ProductService.getProduct(reference),
+  },
+  ProductCategory: {
+    __resolveReference: (reference: { id: number }) => ProductCategoriesService.getProductCategory(reference),
+  },
+  DepartmentCategory: {
+    __resolveReference: (reference: { id: number }) => DepartmentCategoriesService.getDepartmentCategory(reference),
+  },
+  Department: {
+    __resolveReference: (reference: { id: number }) => DepartmentService.getDepartment(reference),
   },
 };

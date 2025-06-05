@@ -1,40 +1,38 @@
 import gql from "graphql-tag";
 
 export const typeDefs = gql`
-  extend schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "@shareable"])
+  extend schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "@shareable", "@external"])
 
   extend type User @key(fields: "id") {
-    id: ID! @federation__external
+    id: ID! @external
   }
 
-  type ProductCategory {
+  type ProductCategory @key(fields: "id") {
     id: ID!
     productCategory: String!
     products: [Product]
-    departmentCategoryId: Int!
   }
 
-  type DepartmentCategory {
+  type DepartmentCategory @key(fields: "id") {
     id: ID!
     departmentCategory: String!
-    departmentId: Int!
   }
 
-  type Department {
+  type Department @key(fields: "id") {
     id: ID!
     department: String!
   }
 
-  type Product {
+  type Product @key(fields: "id") {
     id: ID!
     name: String!
     description: String!
     price: Int!
     images: [String]
-    hasOffer: Boolean!
+    hasOffer: Boolean
     offerPrice: Int
     stock: Int!
-    size: String!
+    size: String
     productCategoryId: Int!
     productCategory: ProductCategory
     userId: String!

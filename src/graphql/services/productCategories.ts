@@ -18,7 +18,6 @@ export const ProductCategoriesService = {
   },
   getProductCategory: async ({ id }: { id: number }) => {
     const parsedId = Number(id);
-
     const productCategory = await prisma.productCategory.findUnique({
       where: { id: parsedId },
       select: {
@@ -26,7 +25,6 @@ export const ProductCategoriesService = {
         productCategory: true,
       },
     });
-
     return productCategory;
   },
   getProductCategoriesByDepartmentCategory: async ({ id }: { id: number }) => {
