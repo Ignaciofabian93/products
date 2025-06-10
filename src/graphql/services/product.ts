@@ -35,30 +35,42 @@ export const ProductService = {
     return products;
   },
   addProduct: async ({
+    sku,
+    barcode,
+    color,
+    brand,
     name,
     description,
     price,
     hasOffer,
     offerPrice,
     stock,
+    isActive,
+    isExchangeable,
+    badges,
     images,
     userId,
     productCategoryId,
-    size,
   }: Omit<Product, "id">) => {
     try {
       const product = await prisma.product.create({
         data: {
+          sku: sku || null,
+          barcode: barcode || null,
+          color: color || null,
+          brand,
           name,
           description,
           price,
           hasOffer,
           offerPrice,
           stock,
+          isActive,
+          isExchangeable,
+          badges,
           images,
           userId,
           productCategoryId,
-          size: size || "regular",
         },
       });
       if (!product) {
@@ -80,7 +92,6 @@ export const ProductService = {
     stock,
     images,
     productCategoryId,
-    size,
     userId,
   }: Product) => {
     const product = await prisma.product.update({
@@ -95,7 +106,7 @@ export const ProductService = {
         images,
         userId,
         productCategoryId,
-        size,
+        brand: "Brand Name", // Assuming a default brand name, adjust as necessary
       },
     });
 

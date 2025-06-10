@@ -25,6 +25,10 @@ export const typeDefs = gql`
 
   type Product @key(fields: "id") {
     id: ID!
+    sku: String
+    barcode: String
+    color: String
+    brand: String
     name: String!
     description: String!
     price: Int!
@@ -32,7 +36,12 @@ export const typeDefs = gql`
     hasOffer: Boolean
     offerPrice: Int
     stock: Int!
-    size: String
+    isExchangeable: Boolean
+    isActive: Boolean
+    ratings: Float
+    ratingsCount: Int
+    reviewsNumber: Int
+    badges: [String]
     productCategoryId: Int!
     productCategory: ProductCategory
     userId: String!
@@ -60,6 +69,10 @@ export const typeDefs = gql`
   extend type Mutation {
     stockControl(id: ID, quantity: Int, operation: String): Int
     addProduct(
+      sku: String
+      barcode: String
+      color: String
+      brand: String
       name: String!
       description: String!
       price: Int!
@@ -67,22 +80,35 @@ export const typeDefs = gql`
       hasOffer: Boolean
       offerPrice: Int
       stock: Int!
-      size: String
+      isExchangeable: Boolean
+      isActive: Boolean
+      ratings: Float
+      ratingsCount: Int
+      reviewsNumber: Int
+      badges: [String]
       productCategoryId: Int!
       userId: String!
     ): Product
     updateProduct(
-      id: ID!
-      name: String
-      description: String
-      price: Int
+      sku: String
+      barcode: String
+      color: String
+      brand: String
+      name: String!
+      description: String!
+      price: Int!
       images: [String]
       hasOffer: Boolean
       offerPrice: Int
-      stock: Int
-      size: String
-      productCategoryId: Int
-      userId: String
+      stock: Int!
+      isExchangeable: Boolean
+      isActive: Boolean
+      ratings: Float
+      ratingsCount: Int
+      reviewsNumber: Int
+      badges: [String]
+      productCategoryId: Int!
+      userId: String!
     ): Product
     deleteProduct(id: ID!): Product
   }
