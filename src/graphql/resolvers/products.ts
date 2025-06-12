@@ -23,6 +23,9 @@ export const ProductResolver = {
     products: (_parent: unknown, _args: unknown) => ProductService.getProducts(),
     product: (_parent: unknown, _args: { id: number }) => ProductService.getProduct(_args),
     productsByOwner: (_parent: unknown, _args: { id: string }) => ProductService.getProductsByOwner(_args),
+
+    feedProducts: (_parent: unknown, _args: { limit: number; scope: "MARKET" | "STORE"; exchange: boolean }) =>
+      ProductService.getFeedProducts(_args),
   },
   Mutation: {
     addProduct: (_parent: unknown, _args: Omit<Product, "id">) => ProductService.addProduct(_args),

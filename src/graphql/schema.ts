@@ -3,6 +3,11 @@ import gql from "graphql-tag";
 export const typeDefs = gql`
   extend schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "@shareable", "@external"])
 
+  enum Scope {
+    MARKET
+    STORE
+  }
+
   extend type User @key(fields: "id") {
     id: ID! @external
   }
@@ -37,6 +42,7 @@ export const typeDefs = gql`
     offerPrice: Int
     stock: Int!
     isExchangeable: Boolean
+    interests: [String]
     isActive: Boolean
     ratings: Float
     ratingsCount: Int
@@ -64,6 +70,8 @@ export const typeDefs = gql`
     products: [Product]
     product(id: ID!): Product
     productsByOwner(id: ID!): [Product]
+
+    feedProducts(limit: Int!, scope: Scope!, exchange: Boolean): [Product]
   }
 
   extend type Mutation {
@@ -81,6 +89,7 @@ export const typeDefs = gql`
       offerPrice: Int
       stock: Int!
       isExchangeable: Boolean
+      interests: [String]
       isActive: Boolean
       ratings: Float
       ratingsCount: Int
@@ -102,6 +111,7 @@ export const typeDefs = gql`
       offerPrice: Int
       stock: Int!
       isExchangeable: Boolean
+      interests: [String]
       isActive: Boolean
       ratings: Float
       ratingsCount: Int

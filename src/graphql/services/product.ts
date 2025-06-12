@@ -34,6 +34,45 @@ export const ProductService = {
 
     return products;
   },
+  getFeedProducts: async ({
+    limit = 10,
+    scope = "MARKET",
+    exchange,
+  }: {
+    limit?: number;
+    scope: "MARKET" | "STORE";
+    exchange: boolean;
+  }) => {
+    const products = await prisma.product.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            isCompany: true,
+            profileImage: true,
+          },
+        },
+      },
+      where: {
+        isActive: true,
+        isExchangeable: exchange,
+      },
+      take: limit,
+      orderBy: { createdAt: "desc" },
+    });
+
+    if (!products) {
+      return new ErrorService.NotFoundError("No se encontraron productos");
+    }
+
+    if (scope === "MARKET") {
+      return products.filter((product) => !product.user.isCompany && product.isActive);
+    } else if (scope === "STORE") {
+      return products.filter((product) => product.user.isCompany && product.isActive);
+    }
+
+    return products;
+  },
   addProduct: async ({
     sku,
     barcode,
