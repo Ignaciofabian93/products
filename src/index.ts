@@ -12,6 +12,12 @@ const server = new ApolloServer({
       resolvers,
     },
   ]),
+  formatError: (err) => {
+    // Log the error to the console
+    console.error("GraphQL Error:", err);
+    // Return a generic error message to the client
+    return new Error("Un error inesperado ha ocurrido. Por favor, inténtalo de nuevo más tarde.");
+  },
 });
 
 await server.start();

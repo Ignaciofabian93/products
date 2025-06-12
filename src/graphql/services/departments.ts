@@ -1,9 +1,10 @@
 import prisma from "../../client/prisma";
 import { ErrorService } from "../../errors/errors";
+import { type Department } from "../../types/product";
 
 export const DepartmentService = {
   getDepartments: async () => {
-    const departments = await prisma.department.findMany({
+    const departments: Department[] = await prisma.department.findMany({
       select: {
         id: true,
         department: true,
@@ -18,7 +19,7 @@ export const DepartmentService = {
   },
   getDepartment: async ({ id }: { id: number }) => {
     const parsedId = Number(id);
-    const department = await prisma.department.findUnique({
+    const department: Department | null = await prisma.department.findUnique({
       where: { id: parsedId },
       select: {
         id: true,

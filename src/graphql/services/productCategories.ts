@@ -1,12 +1,32 @@
 import prisma from "../../client/prisma";
 import { ErrorService } from "../../errors/errors";
+import { type ProductCategory } from "../../types/product";
 
 export const ProductCategoriesService = {
   getProductCategories: async () => {
-    const productCategories = await prisma.productCategory.findMany({
+    const productCategories: ProductCategory[] = await prisma.productCategory.findMany({
       select: {
         id: true,
         productCategory: true,
+        departmentCategoryId: true,
+        keywords: true,
+        materialImpactEstimateId: true,
+        maxWeight: true,
+        minWeight: true,
+        size: true,
+        weightUnit: true,
+        materialImpactEstimate: {
+          select: {
+            id: true,
+            materialType: true,
+            maxWeight: true,
+            minWeight: true,
+            notes: true,
+            estimatedCo2SavingsKG: true,
+            estimatedWasteSavingsKG: true,
+            estimatedWaterSavingsLT: true,
+          },
+        },
       },
     });
 
@@ -18,24 +38,61 @@ export const ProductCategoriesService = {
   },
   getProductCategory: async ({ id }: { id: number }) => {
     const parsedId = Number(id);
-    const productCategory = await prisma.productCategory.findUnique({
-      where: { id: parsedId },
+    const productCategory: ProductCategory | null = await prisma.productCategory.findUnique({
       select: {
         id: true,
         productCategory: true,
+        departmentCategoryId: true,
+        keywords: true,
+        materialImpactEstimateId: true,
+        maxWeight: true,
+        minWeight: true,
+        size: true,
+        weightUnit: true,
+        materialImpactEstimate: {
+          select: {
+            id: true,
+            materialType: true,
+            maxWeight: true,
+            minWeight: true,
+            notes: true,
+            estimatedCo2SavingsKG: true,
+            estimatedWasteSavingsKG: true,
+            estimatedWaterSavingsLT: true,
+          },
+        },
       },
+      where: { id: parsedId },
     });
     return productCategory;
   },
   getProductCategoriesByDepartmentCategory: async ({ id }: { id: number }) => {
     const parsedId = Number(id);
-
-    const productCategories = await prisma.productCategory.findMany({
-      where: { departmentCategoryId: parsedId },
+    const productCategories: ProductCategory[] = await prisma.productCategory.findMany({
       select: {
         id: true,
         productCategory: true,
+        departmentCategoryId: true,
+        keywords: true,
+        materialImpactEstimateId: true,
+        maxWeight: true,
+        minWeight: true,
+        size: true,
+        weightUnit: true,
+        materialImpactEstimate: {
+          select: {
+            id: true,
+            materialType: true,
+            maxWeight: true,
+            minWeight: true,
+            notes: true,
+            estimatedCo2SavingsKG: true,
+            estimatedWasteSavingsKG: true,
+            estimatedWaterSavingsLT: true,
+          },
+        },
       },
+      where: { departmentCategoryId: parsedId },
     });
 
     if (!productCategories.length) {

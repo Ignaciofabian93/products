@@ -1,9 +1,10 @@
 import prisma from "../../client/prisma";
 import { ErrorService } from "../../errors/errors";
+import { type DepartmentCategory } from "../../types/product";
 
 export const DepartmentCategoriesService = {
   getDepartmentCategories: async () => {
-    const departmentCategories = await prisma.departmentCategory.findMany({
+    const departmentCategories: DepartmentCategory[] = await prisma.departmentCategory.findMany({
       select: {
         id: true,
         departmentId: true,
@@ -19,7 +20,7 @@ export const DepartmentCategoriesService = {
   },
   getDepartmentCategory: async ({ id }: { id: number }) => {
     const parsedId = Number(id);
-    const departmentCategory = await prisma.departmentCategory.findUnique({
+    const departmentCategory: DepartmentCategory | null = await prisma.departmentCategory.findUnique({
       where: { id: parsedId },
       select: {
         id: true,
@@ -33,7 +34,7 @@ export const DepartmentCategoriesService = {
   getDepartmentCategoriesByDepartment: async ({ id }: { id: number }) => {
     const parsedId = Number(id);
 
-    const departmentCategories = await prisma.departmentCategory.findMany({
+    const departmentCategories: DepartmentCategory[] = await prisma.departmentCategory.findMany({
       where: { departmentId: parsedId },
       select: {
         id: true,

@@ -1,10 +1,76 @@
 import prisma from "../../client/prisma";
 import { ErrorService } from "../../errors/errors";
-import { Product } from "../../types/product";
+import { type Product } from "../../types/product";
 
 export const ProductService = {
   getProducts: async () => {
-    const products = await prisma.product.findMany({});
+    const products: Product[] = await prisma.product.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            surnames: true,
+            profileImage: true,
+            isCompany: true,
+            businessName: true,
+            phone: true,
+            address: true,
+            county: {
+              select: {
+                id: true,
+                county: true,
+              },
+            },
+            city: {
+              select: {
+                id: true,
+                city: true,
+              },
+            },
+            region: {
+              select: {
+                id: true,
+                region: true,
+              },
+            },
+          },
+        },
+        productCategory: {
+          select: {
+            id: true,
+            productCategory: true,
+            departmentCategoryId: true,
+            keywords: true,
+            materialImpactEstimateId: true,
+            size: true,
+            minWeight: true,
+            maxWeight: true,
+            weightUnit: true,
+          },
+        },
+        comments: {
+          select: {
+            id: true,
+            comment: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                businessName: true,
+              },
+            },
+          },
+        },
+        likes: {
+          select: {
+            id: true,
+            userId: true,
+          },
+        },
+      },
+    });
 
     if (!products) {
       return new ErrorService.NotFoundError("No se encontraron productos");
@@ -13,7 +79,72 @@ export const ProductService = {
     return products;
   },
   getProduct: async ({ id }: { id: number }) => {
-    const product = await prisma.product.findUnique({
+    const product: Product | null = await prisma.product.findUnique({
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            surnames: true,
+            profileImage: true,
+            isCompany: true,
+            businessName: true,
+            phone: true,
+            address: true,
+            county: {
+              select: {
+                id: true,
+                county: true,
+              },
+            },
+            city: {
+              select: {
+                id: true,
+                city: true,
+              },
+            },
+            region: {
+              select: {
+                id: true,
+                region: true,
+              },
+            },
+          },
+        },
+        productCategory: {
+          select: {
+            id: true,
+            productCategory: true,
+            departmentCategoryId: true,
+            keywords: true,
+            materialImpactEstimateId: true,
+            size: true,
+            minWeight: true,
+            maxWeight: true,
+            weightUnit: true,
+          },
+        },
+        comments: {
+          select: {
+            id: true,
+            comment: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                businessName: true,
+              },
+            },
+          },
+        },
+        likes: {
+          select: {
+            id: true,
+            userId: true,
+          },
+        },
+      },
       where: { id: Number(id) },
     });
 
@@ -24,7 +155,72 @@ export const ProductService = {
     return product;
   },
   getProductsByOwner: async ({ id }: { id: string }) => {
-    const products = await prisma.product.findMany({
+    const products: Product[] = await prisma.product.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            surnames: true,
+            profileImage: true,
+            isCompany: true,
+            businessName: true,
+            phone: true,
+            address: true,
+            county: {
+              select: {
+                id: true,
+                county: true,
+              },
+            },
+            city: {
+              select: {
+                id: true,
+                city: true,
+              },
+            },
+            region: {
+              select: {
+                id: true,
+                region: true,
+              },
+            },
+          },
+        },
+        productCategory: {
+          select: {
+            id: true,
+            productCategory: true,
+            departmentCategoryId: true,
+            keywords: true,
+            materialImpactEstimateId: true,
+            size: true,
+            minWeight: true,
+            maxWeight: true,
+            weightUnit: true,
+          },
+        },
+        comments: {
+          select: {
+            id: true,
+            comment: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                businessName: true,
+              },
+            },
+          },
+        },
+        likes: {
+          select: {
+            id: true,
+            userId: true,
+          },
+        },
+      },
       where: { userId: id },
     });
 
@@ -49,8 +245,64 @@ export const ProductService = {
         user: {
           select: {
             id: true,
-            isCompany: true,
+            name: true,
+            email: true,
+            surnames: true,
             profileImage: true,
+            isCompany: true,
+            businessName: true,
+            phone: true,
+            address: true,
+            county: {
+              select: {
+                id: true,
+                county: true,
+              },
+            },
+            city: {
+              select: {
+                id: true,
+                city: true,
+              },
+            },
+            region: {
+              select: {
+                id: true,
+                region: true,
+              },
+            },
+          },
+        },
+        productCategory: {
+          select: {
+            id: true,
+            productCategory: true,
+            departmentCategoryId: true,
+            keywords: true,
+            materialImpactEstimateId: true,
+            size: true,
+            minWeight: true,
+            maxWeight: true,
+            weightUnit: true,
+          },
+        },
+        comments: {
+          select: {
+            id: true,
+            comment: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                businessName: true,
+              },
+            },
+          },
+        },
+        likes: {
+          select: {
+            id: true,
+            userId: true,
           },
         },
       },
@@ -89,61 +341,70 @@ export const ProductService = {
     userId,
     productCategoryId,
   }: Omit<Product, "id">) => {
-    try {
-      const product = await prisma.product.create({
-        data: {
-          sku: sku || null,
-          barcode: barcode || null,
-          color: color || null,
-          brand,
-          name,
-          description,
-          price,
-          hasOffer,
-          offerPrice,
-          stock,
-          isActive,
-          isExchangeable,
-          badges,
-          images,
-          userId,
-          productCategoryId,
-        },
-      });
-      if (!product) {
-        return new ErrorService.InternalServerError("Error al crear el producto");
-      }
-
-      return product;
-    } catch (error) {
-      console.log("ERROR!!:: ", error);
-    }
-  },
-  updateProduct: async ({
-    id,
-    name,
-    description,
-    price,
-    hasOffer,
-    offerPrice,
-    stock,
-    images,
-    productCategoryId,
-    userId,
-  }: Product) => {
-    const product = await prisma.product.update({
-      where: { id: Number(id) },
+    const product: Product = await prisma.product.create({
       data: {
+        sku: sku || null,
+        barcode: barcode || null,
+        color: color || null,
+        brand,
         name,
         description,
         price,
         hasOffer,
         offerPrice,
         stock,
+        isActive,
+        isExchangeable,
+        badges,
         images,
         userId,
         productCategoryId,
-        brand: "Brand Name", // Assuming a default brand name, adjust as necessary
+      },
+    });
+    if (!product) {
+      return new ErrorService.InternalServerError("Error al crear el producto");
+    }
+
+    return product;
+  },
+  updateProduct: async ({
+    id,
+    sku,
+    barcode,
+    color,
+    brand,
+    name,
+    description,
+    price,
+    hasOffer,
+    offerPrice,
+    stock,
+    isActive,
+    isExchangeable,
+    badges,
+    images,
+    userId,
+    productCategoryId,
+  }: Product) => {
+    const product: Product = await prisma.product.update({
+      where: { id: Number(id) },
+      data: {
+        sku: sku || null,
+        barcode: barcode || null,
+        color: color || null,
+        brand,
+        name,
+        description,
+        price,
+        hasOffer,
+        offerPrice,
+        stock,
+        isActive,
+        isExchangeable,
+        badges,
+        images,
+        userId,
+        productCategoryId,
       },
     });
 
@@ -154,7 +415,7 @@ export const ProductService = {
     return product;
   },
   deleteProduct: async ({ id }: { id: number }) => {
-    const product = await prisma.product.delete({
+    const product: Product = await prisma.product.delete({
       where: { id: Number(id) },
     });
 
