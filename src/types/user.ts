@@ -1,0 +1,22 @@
+export type User = {
+  id: string;
+  name: string;
+  surnames: string;
+  businessName: string;
+  email: string;
+  profileImage?: string;
+  birthday: string;
+  password: string;
+  accountType: "FREE" | "PLUS" | "PREMIUM";
+  preferredContactMethod: "EMAIL" | "WHATSAPP" | "ALL";
+  points: number;
+  isCompany: boolean;
+  address: string;
+  countyId: number;
+  cityId: number;
+  regionId: number;
+  countryId: number;
+  phone: string;
+  createdAt: string;
+  updatedAt: string;
+};

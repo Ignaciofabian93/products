@@ -43,6 +43,7 @@ export const ProductService = {
     scope: "MARKET" | "STORE";
     exchange: boolean;
   }) => {
+    const isCompany = scope === "STORE";
     const products = await prisma.product.findMany({
       include: {
         user: {
@@ -56,6 +57,9 @@ export const ProductService = {
       where: {
         isActive: true,
         isExchangeable: exchange,
+        user: {
+          isCompany,
+        },
       },
       take: limit,
       orderBy: { createdAt: "desc" },
@@ -63,12 +67,6 @@ export const ProductService = {
 
     if (!products) {
       return new ErrorService.NotFoundError("No se encontraron productos");
-    }
-
-    if (scope === "MARKET") {
-      return products.filter((product) => !product.user.isCompany && product.isActive);
-    } else if (scope === "STORE") {
-      return products.filter((product) => product.user.isCompany && product.isActive);
     }
 
     return products;

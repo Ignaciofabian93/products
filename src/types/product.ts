@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export type ProductCategory = {
   id: number;
   productCategory: string;
@@ -20,7 +22,7 @@ export type Product = {
   id: number;
   sku?: string | null;
   barcode?: string | null;
-  color?: string;
+  color?: string | null;
   brand: string;
   name: string;
   description: string;
@@ -54,6 +56,21 @@ export type Product = {
     | "LIMITED_STOCK"
     | "SEASONAL"
     | "FREE_SHIPPING"
+    | "NEW"
+    | "USED"
+    | "SLIGHT_DAMAGE"
+    | "WORN"
+    | "FOR_REPAIR"
+    | "REFURBISHED"
+    | "EXCHANGEABLE"
+    | "LAST_PRICE"
+    | "FOR_GIFT"
+    | "OPEN_TO_OFFERS"
+    | "OPEN_BOX"
+    | "CRUELTY_FREE"
+    | "DELIVERED_TO_HOME"
+    | "IN_HOUSE_PICKUP"
+    | "IN_MID_POINT_PICKUP"
   )[];
   createdAt: Date;
   updatedAt?: Date;
@@ -61,6 +78,7 @@ export type Product = {
   likes?: Like[];
   comments?: Comment[];
   itemsOrdered?: ItemOrdered[];
+  user: User;
 };
 
 export type Like = {
