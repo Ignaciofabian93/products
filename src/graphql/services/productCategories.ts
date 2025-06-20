@@ -7,7 +7,7 @@ export const ProductCategoriesService = {
     const productCategories: ProductCategory[] = await prisma.productCategory.findMany({
       select: {
         id: true,
-        productCategory: true,
+        productCategoryName: true,
         departmentCategoryId: true,
         keywords: true,
         materialImpactEstimateId: true,
@@ -25,6 +25,19 @@ export const ProductCategoriesService = {
             estimatedCo2SavingsKG: true,
             estimatedWasteSavingsKG: true,
             estimatedWaterSavingsLT: true,
+          },
+        },
+        departmentCategory: {
+          select: {
+            id: true,
+            departmentCategoryName: true,
+            departmentId: true,
+            department: {
+              select: {
+                id: true,
+                departmentName: true,
+              },
+            },
           },
         },
       },
@@ -41,7 +54,7 @@ export const ProductCategoriesService = {
     const productCategory: ProductCategory | null = await prisma.productCategory.findUnique({
       select: {
         id: true,
-        productCategory: true,
+        productCategoryName: true,
         departmentCategoryId: true,
         keywords: true,
         materialImpactEstimateId: true,
@@ -61,6 +74,19 @@ export const ProductCategoriesService = {
             estimatedWaterSavingsLT: true,
           },
         },
+        departmentCategory: {
+          select: {
+            id: true,
+            departmentCategoryName: true,
+            departmentId: true,
+            department: {
+              select: {
+                id: true,
+                departmentName: true,
+              },
+            },
+          },
+        },
       },
       where: { id: parsedId },
     });
@@ -71,7 +97,7 @@ export const ProductCategoriesService = {
     const productCategories: ProductCategory[] = await prisma.productCategory.findMany({
       select: {
         id: true,
-        productCategory: true,
+        productCategoryName: true,
         departmentCategoryId: true,
         keywords: true,
         materialImpactEstimateId: true,
@@ -89,6 +115,19 @@ export const ProductCategoriesService = {
             estimatedCo2SavingsKG: true,
             estimatedWasteSavingsKG: true,
             estimatedWaterSavingsLT: true,
+          },
+        },
+        departmentCategory: {
+          select: {
+            id: true,
+            departmentCategoryName: true,
+            departmentId: true,
+            department: {
+              select: {
+                id: true,
+                departmentName: true,
+              },
+            },
           },
         },
       },

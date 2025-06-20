@@ -7,7 +7,112 @@ export const DepartmentService = {
     const departments: Department[] = await prisma.department.findMany({
       select: {
         id: true,
-        department: true,
+        departmentName: true,
+        departmentCategories: {
+          select: {
+            id: true,
+            departmentCategoryName: true,
+            productCategories: {
+              select: {
+                id: true,
+                productCategoryName: true,
+                keywords: true,
+                materialImpactEstimateId: true,
+                maxWeight: true,
+                minWeight: true,
+                size: true,
+                weightUnit: true,
+                materialImpactEstimate: {
+                  select: {
+                    id: true,
+                    materialType: true,
+                    maxWeight: true,
+                    minWeight: true,
+                    notes: true,
+                    estimatedCo2SavingsKG: true,
+                    estimatedWasteSavingsKG: true,
+                    estimatedWaterSavingsLT: true,
+                  },
+                },
+                products: {
+                  select: {
+                    id: true,
+                    sku: true,
+                    barcode: true,
+                    color: true,
+                    brand: true,
+                    name: true,
+                    description: true,
+                    price: true,
+                    images: true,
+                    hasOffer: true,
+                    offerPrice: true,
+                    stock: true,
+                    isExchangeable: true,
+                    interests: true,
+                    isActive: true,
+                    ratings: true,
+                    ratingCount: true,
+                    reviewsNumber: true,
+                    badges: true,
+                    createdAt: true,
+                    updatedAt: true,
+                    user: {
+                      select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        surnames: true,
+                        profileImage: true,
+                        isCompany: true,
+                        businessName: true,
+                        phone: true,
+                        address: true,
+                        county: {
+                          select: {
+                            id: true,
+                            county: true,
+                          },
+                        },
+                        city: {
+                          select: {
+                            id: true,
+                            city: true,
+                          },
+                        },
+                        region: {
+                          select: {
+                            id: true,
+                            region: true,
+                          },
+                        },
+                      },
+                    },
+                    comments: {
+                      select: {
+                        id: true,
+                        comment: true,
+                        user: {
+                          select: {
+                            id: true,
+                            name: true,
+                            businessName: true,
+                          },
+                        },
+                      },
+                    },
+                    likes: {
+                      select: {
+                        id: true,
+                        userId: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     });
 
@@ -23,7 +128,112 @@ export const DepartmentService = {
       where: { id: parsedId },
       select: {
         id: true,
-        department: true,
+        departmentName: true,
+        departmentCategories: {
+          select: {
+            id: true,
+            departmentCategoryName: true,
+            productCategories: {
+              select: {
+                id: true,
+                productCategoryName: true,
+                keywords: true,
+                materialImpactEstimateId: true,
+                maxWeight: true,
+                minWeight: true,
+                size: true,
+                weightUnit: true,
+                materialImpactEstimate: {
+                  select: {
+                    id: true,
+                    materialType: true,
+                    maxWeight: true,
+                    minWeight: true,
+                    notes: true,
+                    estimatedCo2SavingsKG: true,
+                    estimatedWasteSavingsKG: true,
+                    estimatedWaterSavingsLT: true,
+                  },
+                },
+                products: {
+                  select: {
+                    id: true,
+                    sku: true,
+                    barcode: true,
+                    color: true,
+                    brand: true,
+                    name: true,
+                    description: true,
+                    price: true,
+                    images: true,
+                    hasOffer: true,
+                    offerPrice: true,
+                    stock: true,
+                    isExchangeable: true,
+                    interests: true,
+                    isActive: true,
+                    ratings: true,
+                    ratingCount: true,
+                    reviewsNumber: true,
+                    badges: true,
+                    createdAt: true,
+                    updatedAt: true,
+                    user: {
+                      select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        surnames: true,
+                        profileImage: true,
+                        isCompany: true,
+                        businessName: true,
+                        phone: true,
+                        address: true,
+                        county: {
+                          select: {
+                            id: true,
+                            county: true,
+                          },
+                        },
+                        city: {
+                          select: {
+                            id: true,
+                            city: true,
+                          },
+                        },
+                        region: {
+                          select: {
+                            id: true,
+                            region: true,
+                          },
+                        },
+                      },
+                    },
+                    comments: {
+                      select: {
+                        id: true,
+                        comment: true,
+                        user: {
+                          select: {
+                            id: true,
+                            name: true,
+                            businessName: true,
+                          },
+                        },
+                      },
+                    },
+                    likes: {
+                      select: {
+                        id: true,
+                        userId: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     });
 

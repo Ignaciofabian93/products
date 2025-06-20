@@ -40,7 +40,7 @@ export const ProductService = {
         productCategory: {
           select: {
             id: true,
-            productCategory: true,
+            productCategoryName: true,
             departmentCategoryId: true,
             keywords: true,
             materialImpactEstimateId: true,
@@ -48,6 +48,19 @@ export const ProductService = {
             minWeight: true,
             maxWeight: true,
             weightUnit: true,
+            departmentCategory: {
+              select: {
+                id: true,
+                departmentCategoryName: true,
+                departmentId: true,
+                department: {
+                  select: {
+                    id: true,
+                    departmentName: true,
+                  },
+                },
+              },
+            },
           },
         },
         comments: {
@@ -75,6 +88,7 @@ export const ProductService = {
     if (!products) {
       return new ErrorService.NotFoundError("No se encontraron productos");
     }
+    console.log("Products fetched successfully:", products);
 
     return products;
   },
@@ -115,7 +129,7 @@ export const ProductService = {
         productCategory: {
           select: {
             id: true,
-            productCategory: true,
+            productCategoryName: true,
             departmentCategoryId: true,
             keywords: true,
             materialImpactEstimateId: true,
@@ -123,6 +137,19 @@ export const ProductService = {
             minWeight: true,
             maxWeight: true,
             weightUnit: true,
+            departmentCategory: {
+              select: {
+                id: true,
+                departmentCategoryName: true,
+                departmentId: true,
+                department: {
+                  select: {
+                    id: true,
+                    departmentName: true,
+                  },
+                },
+              },
+            },
           },
         },
         comments: {
@@ -191,7 +218,7 @@ export const ProductService = {
         productCategory: {
           select: {
             id: true,
-            productCategory: true,
+            productCategoryName: true,
             departmentCategoryId: true,
             keywords: true,
             materialImpactEstimateId: true,
@@ -199,6 +226,19 @@ export const ProductService = {
             minWeight: true,
             maxWeight: true,
             weightUnit: true,
+            departmentCategory: {
+              select: {
+                id: true,
+                departmentCategoryName: true,
+                departmentId: true,
+                department: {
+                  select: {
+                    id: true,
+                    departmentName: true,
+                  },
+                },
+              },
+            },
           },
         },
         comments: {
@@ -276,7 +316,7 @@ export const ProductService = {
         productCategory: {
           select: {
             id: true,
-            productCategory: true,
+            productCategoryName: true,
             departmentCategoryId: true,
             keywords: true,
             materialImpactEstimateId: true,
@@ -284,6 +324,19 @@ export const ProductService = {
             minWeight: true,
             maxWeight: true,
             weightUnit: true,
+            departmentCategory: {
+              select: {
+                id: true,
+                departmentCategoryName: true,
+                departmentId: true,
+                department: {
+                  select: {
+                    id: true,
+                    departmentName: true,
+                  },
+                },
+              },
+            },
           },
         },
         comments: {

@@ -8,7 +8,91 @@ export const DepartmentCategoriesService = {
       select: {
         id: true,
         departmentId: true,
-        departmentCategory: true,
+        department: {
+          select: {
+            id: true,
+            departmentName: true,
+          },
+        },
+        departmentCategoryName: true,
+        productCategories: {
+          select: {
+            id: true,
+            productCategoryName: true,
+            keywords: true,
+            materialImpactEstimateId: true,
+            maxWeight: true,
+            minWeight: true,
+            size: true,
+            weightUnit: true,
+            materialImpactEstimate: {
+              select: {
+                id: true,
+                materialType: true,
+                maxWeight: true,
+                minWeight: true,
+                notes: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWasteSavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
+            products: {
+              select: {
+                id: true,
+                sku: true,
+                barcode: true,
+                color: true,
+                brand: true,
+                name: true,
+                description: true,
+                price: true,
+                images: true,
+                hasOffer: true,
+                offerPrice: true,
+                stock: true,
+                isExchangeable: true,
+                interests: true,
+                isActive: true,
+                ratings: true,
+                userId: true,
+                createdAt: true,
+                updatedAt: true,
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    surnames: true,
+                    profileImage: true,
+                    isCompany: true,
+                    businessName: true,
+                    phone: true,
+                    address: true,
+                    county: {
+                      select: {
+                        id: true,
+                        county: true,
+                      },
+                    },
+                    city: {
+                      select: {
+                        id: true,
+                        city: true,
+                      },
+                    },
+                    region: {
+                      select: {
+                        id: true,
+                        region: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     });
 
@@ -25,7 +109,91 @@ export const DepartmentCategoriesService = {
       select: {
         id: true,
         departmentId: true,
-        departmentCategory: true,
+        department: {
+          select: {
+            id: true,
+            departmentName: true,
+          },
+        },
+        departmentCategoryName: true,
+        productCategories: {
+          select: {
+            id: true,
+            productCategoryName: true,
+            keywords: true,
+            materialImpactEstimateId: true,
+            maxWeight: true,
+            minWeight: true,
+            size: true,
+            weightUnit: true,
+            materialImpactEstimate: {
+              select: {
+                id: true,
+                materialType: true,
+                maxWeight: true,
+                minWeight: true,
+                notes: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWasteSavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
+            products: {
+              select: {
+                id: true,
+                sku: true,
+                barcode: true,
+                color: true,
+                brand: true,
+                name: true,
+                description: true,
+                price: true,
+                images: true,
+                hasOffer: true,
+                offerPrice: true,
+                stock: true,
+                isExchangeable: true,
+                interests: true,
+                isActive: true,
+                ratings: true,
+                userId: true,
+                createdAt: true,
+                updatedAt: true,
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    surnames: true,
+                    profileImage: true,
+                    isCompany: true,
+                    businessName: true,
+                    phone: true,
+                    address: true,
+                    county: {
+                      select: {
+                        id: true,
+                        county: true,
+                      },
+                    },
+                    city: {
+                      select: {
+                        id: true,
+                        city: true,
+                      },
+                    },
+                    region: {
+                      select: {
+                        id: true,
+                        region: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     });
 
@@ -39,7 +207,91 @@ export const DepartmentCategoriesService = {
       select: {
         id: true,
         departmentId: true,
-        departmentCategory: true,
+        department: {
+          select: {
+            id: true,
+            departmentName: true,
+          },
+        },
+        departmentCategoryName: true,
+        productCategories: {
+          select: {
+            id: true,
+            productCategoryName: true,
+            keywords: true,
+            materialImpactEstimateId: true,
+            maxWeight: true,
+            minWeight: true,
+            size: true,
+            weightUnit: true,
+            materialImpactEstimate: {
+              select: {
+                id: true,
+                materialType: true,
+                maxWeight: true,
+                minWeight: true,
+                notes: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWasteSavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
+            products: {
+              select: {
+                id: true,
+                sku: true,
+                barcode: true,
+                color: true,
+                brand: true,
+                name: true,
+                description: true,
+                price: true,
+                images: true,
+                hasOffer: true,
+                offerPrice: true,
+                stock: true,
+                isExchangeable: true,
+                interests: true,
+                isActive: true,
+                ratings: true,
+                userId: true,
+                createdAt: true,
+                updatedAt: true,
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    surnames: true,
+                    profileImage: true,
+                    isCompany: true,
+                    businessName: true,
+                    phone: true,
+                    address: true,
+                    county: {
+                      select: {
+                        id: true,
+                        county: true,
+                      },
+                    },
+                    city: {
+                      select: {
+                        id: true,
+                        city: true,
+                      },
+                    },
+                    region: {
+                      select: {
+                        id: true,
+                        region: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     });
 

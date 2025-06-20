@@ -48,20 +48,44 @@ export const typeDefs = gql`
     id: ID! @external
   }
 
+  type MaterialImpactEstimate @key(fields: "id") {
+    id: ID!
+    materialType: String!
+    minWeight: Int
+    maxWeight: Int
+    estimatedCo2SavingsKG: Int
+    estimatedWaterSavingsLT: Int
+    estimatedWasteSavingsKG: Int
+    notes: String
+  }
+
   type ProductCategory @key(fields: "id") {
     id: ID!
-    productCategory: String!
+    productCategoryName: String!
+    keywords: [String]
+    materialImpactEstimateId: Int
+    materialImpactEstimate: MaterialImpactEstimate
+    size: String
+    minWeight: Int
+    maxWeight: Int
+    weightUnit: String
     products: [Product]
+    departmentCategoryId: Int!
+    departmentCategory: DepartmentCategory
   }
 
   type DepartmentCategory @key(fields: "id") {
     id: ID!
-    departmentCategory: String!
+    departmentCategoryName: String!
+    departmentId: Int!
+    department: Department
+    productCategories: [ProductCategory]
   }
 
   type Department @key(fields: "id") {
     id: ID!
-    department: String!
+    departmentName: String!
+    departmentCategories: [DepartmentCategory]
   }
 
   scalar DateTime
