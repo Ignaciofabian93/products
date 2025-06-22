@@ -1,9 +1,14 @@
 import prisma from "../../client/prisma";
 import { ErrorService } from "../../errors/errors";
+import { type OrderBy } from "../../types/general";
 import { type ProductCategory } from "../../types/product";
 
 export const ProductCategoriesService = {
-  getProductCategories: async () => {
+  getProductCategories: async ({ take = 20, skip = 0, orderBy }: { take: number; skip: number; orderBy: OrderBy }) => {
+    const { field = "name", direction = "asc" } = orderBy || {};
+    const orderByClause = {
+      [field]: direction,
+    };
     const productCategories: ProductCategory[] = await prisma.productCategory.findMany({
       select: {
         id: true,
@@ -27,6 +32,63 @@ export const ProductCategoriesService = {
             estimatedWaterSavingsLT: true,
           },
         },
+        products: {
+          select: {
+            id: true,
+            sku: true,
+            barcode: true,
+            color: true,
+            brand: true,
+            name: true,
+            description: true,
+            price: true,
+            images: true,
+            hasOffer: true,
+            offerPrice: true,
+            stock: true,
+            isExchangeable: true,
+            interests: true,
+            isActive: true,
+            ratings: true,
+            userId: true,
+            createdAt: true,
+            updatedAt: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                surnames: true,
+                profileImage: true,
+                isCompany: true,
+                businessName: true,
+                phone: true,
+                address: true,
+                county: {
+                  select: {
+                    id: true,
+                    county: true,
+                  },
+                },
+                city: {
+                  select: {
+                    id: true,
+                    city: true,
+                  },
+                },
+                region: {
+                  select: {
+                    id: true,
+                    region: true,
+                  },
+                },
+              },
+            },
+          },
+          orderBy: orderByClause, // Order products by the specified field and direction
+          take, // Limit to 5 products per category
+          skip, // You can adjust this for pagination
+        },
         departmentCategory: {
           select: {
             id: true,
@@ -49,7 +111,21 @@ export const ProductCategoriesService = {
 
     return productCategories;
   },
-  getProductCategory: async ({ id }: { id: number }) => {
+  getProductCategory: async ({
+    id,
+    take = 20,
+    skip = 0,
+    orderBy,
+  }: {
+    id: number;
+    take: number;
+    skip: number;
+    orderBy: OrderBy;
+  }) => {
+    const { field = "name", direction = "asc" } = orderBy || {};
+    const orderByClause = {
+      [field]: direction,
+    };
     const parsedId = Number(id);
     const productCategory: ProductCategory | null = await prisma.productCategory.findUnique({
       select: {
@@ -74,6 +150,63 @@ export const ProductCategoriesService = {
             estimatedWaterSavingsLT: true,
           },
         },
+        products: {
+          select: {
+            id: true,
+            sku: true,
+            barcode: true,
+            color: true,
+            brand: true,
+            name: true,
+            description: true,
+            price: true,
+            images: true,
+            hasOffer: true,
+            offerPrice: true,
+            stock: true,
+            isExchangeable: true,
+            interests: true,
+            isActive: true,
+            ratings: true,
+            userId: true,
+            createdAt: true,
+            updatedAt: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                surnames: true,
+                profileImage: true,
+                isCompany: true,
+                businessName: true,
+                phone: true,
+                address: true,
+                county: {
+                  select: {
+                    id: true,
+                    county: true,
+                  },
+                },
+                city: {
+                  select: {
+                    id: true,
+                    city: true,
+                  },
+                },
+                region: {
+                  select: {
+                    id: true,
+                    region: true,
+                  },
+                },
+              },
+            },
+          },
+          orderBy: orderByClause, // Order products by the specified field and direction
+          take, // Limit to 5 products per category
+          skip, // You can adjust this for pagination
+        },
         departmentCategory: {
           select: {
             id: true,
@@ -92,7 +225,21 @@ export const ProductCategoriesService = {
     });
     return productCategory;
   },
-  getProductCategoriesByDepartmentCategory: async ({ id }: { id: number }) => {
+  getProductCategoriesByDepartmentCategory: async ({
+    id,
+    take = 20,
+    skip = 0,
+    orderBy,
+  }: {
+    id: number;
+    take: number;
+    skip: number;
+    orderBy: OrderBy;
+  }) => {
+    const { field = "name", direction = "asc" } = orderBy || {};
+    const orderByClause = {
+      [field]: direction,
+    };
     const parsedId = Number(id);
     const productCategories: ProductCategory[] = await prisma.productCategory.findMany({
       select: {
@@ -116,6 +263,63 @@ export const ProductCategoriesService = {
             estimatedWasteSavingsKG: true,
             estimatedWaterSavingsLT: true,
           },
+        },
+        products: {
+          select: {
+            id: true,
+            sku: true,
+            barcode: true,
+            color: true,
+            brand: true,
+            name: true,
+            description: true,
+            price: true,
+            images: true,
+            hasOffer: true,
+            offerPrice: true,
+            stock: true,
+            isExchangeable: true,
+            interests: true,
+            isActive: true,
+            ratings: true,
+            userId: true,
+            createdAt: true,
+            updatedAt: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                surnames: true,
+                profileImage: true,
+                isCompany: true,
+                businessName: true,
+                phone: true,
+                address: true,
+                county: {
+                  select: {
+                    id: true,
+                    county: true,
+                  },
+                },
+                city: {
+                  select: {
+                    id: true,
+                    city: true,
+                  },
+                },
+                region: {
+                  select: {
+                    id: true,
+                    region: true,
+                  },
+                },
+              },
+            },
+          },
+          orderBy: orderByClause, // Order products by the specified field and direction
+          take, // Limit to 5 products per category
+          skip, // You can adjust this for pagination
         },
         departmentCategory: {
           select: {

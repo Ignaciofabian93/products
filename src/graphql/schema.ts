@@ -133,24 +133,34 @@ export const typeDefs = gql`
     likes: [ProductLike]
   }
 
+  enum SortDirection {
+    asc
+    desc
+  }
+
+  input OrderByInput {
+    field: String!
+    direction: SortDirection!
+  }
+
   extend type Query {
-    departments: [Department]
-    department(id: ID!): Department
+    departments(take: Int, skip: Int, orderBy: OrderByInput): [Department]
+    department(id: ID!, take: Int, skip: Int, orderBy: OrderByInput): Department
 
-    departmentCategoriesByDepartment(id: ID!): [DepartmentCategory]
-    departmentCategories: [DepartmentCategory]
-    departmentCategory(id: ID!): DepartmentCategory
+    departmentCategoriesByDepartment(id: ID!, take: Int, skip: Int, orderBy: OrderByInput): [DepartmentCategory]
+    departmentCategories(take: Int, skip: Int, orderBy: OrderByInput): [DepartmentCategory]
+    departmentCategory(id: ID!, take: Int, skip: Int, orderBy: OrderByInput): DepartmentCategory
 
-    productCategoriesByDepartmentCategory(id: ID!): [ProductCategory]
-    productCategories: [ProductCategory]
-    productCategory(id: ID!): ProductCategory
+    productCategoriesByDepartmentCategory(id: ID!, take: Int, skip: Int, orderBy: OrderByInput): [ProductCategory]
+    productCategories(take: Int, skip: Int, orderBy: OrderByInput): [ProductCategory]
+    productCategory(id: ID!, take: Int, skip: Int, orderBy: OrderByInput): ProductCategory
 
-    productsByProductCategory(id: ID!): [Product]
-    products: [Product]
+    productsByProductCategory(id: ID!, take: Int, skip: Int, orderBy: OrderByInput): [Product]
+    products(take: Int, skip: Int, orderBy: OrderByInput): [Product]
     product(id: ID!): Product
-    productsByOwner(id: ID!): [Product]
+    productsByOwner(id: ID!, take: Int, skip: Int, orderBy: OrderByInput): [Product]
 
-    feedProducts(limit: Int!, scope: Scope!, exchange: Boolean): [Product]
+    feedProducts(take: Int!, scope: Scope!, exchange: Boolean): [Product]
   }
 
   extend type Mutation {

@@ -1,9 +1,14 @@
 import prisma from "../../client/prisma";
 import { ErrorService } from "../../errors/errors";
+import { type OrderBy } from "../../types/general";
 import { type Product } from "../../types/product";
 
 export const ProductService = {
-  getProducts: async () => {
+  getProducts: async ({ take = 20, skip = 0, orderBy }: { take: number; skip: number; orderBy: OrderBy }) => {
+    const { field = "name", direction = "asc" } = orderBy || {};
+    const orderByClause = {
+      [field]: direction,
+    };
     const products: Product[] = await prisma.product.findMany({
       include: {
         user: {
@@ -83,6 +88,9 @@ export const ProductService = {
           },
         },
       },
+      orderBy: orderByClause, // Order products by the specified field and direction
+      take, // Limit to 5 products per category
+      skip, // You can adjust this for pagination
     });
 
     if (!products) {
@@ -181,7 +189,21 @@ export const ProductService = {
 
     return product;
   },
-  getProductsByOwner: async ({ id }: { id: string }) => {
+  getProductsByOwner: async ({
+    id,
+    take = 20,
+    skip = 0,
+    orderBy,
+  }: {
+    id: string;
+    take: number;
+    skip: number;
+    orderBy: OrderBy;
+  }) => {
+    const { field = "name", direction = "asc" } = orderBy || {};
+    const orderByClause = {
+      [field]: direction,
+    };
     const products: Product[] = await prisma.product.findMany({
       include: {
         user: {
@@ -261,6 +283,9 @@ export const ProductService = {
           },
         },
       },
+      orderBy: orderByClause, // Order products by the specified field and direction
+      take, // Limit to 5 products per category
+      skip, // You can adjust this for pagination
       where: { userId: id },
     });
 
@@ -271,11 +296,11 @@ export const ProductService = {
     return products;
   },
   getFeedProducts: async ({
-    limit = 10,
+    take = 20,
     scope = "MARKET",
     exchange,
   }: {
-    limit?: number;
+    take?: number;
     scope: "MARKET" | "STORE";
     exchange: boolean;
   }) => {
@@ -366,7 +391,7 @@ export const ProductService = {
           isCompany,
         },
       },
-      take: limit,
+      take,
       orderBy: { createdAt: "desc" },
     });
 

@@ -1,31 +1,39 @@
+import { type OrderBy } from "../../types/general";
 import { type Product } from "../../types/product";
 import { DepartmentCategoriesService } from "../services/departmentCategories";
 import { DepartmentService } from "../services/departments";
 import { ProductService } from "../services/product";
 import { ProductCategoriesService } from "../services/productCategories";
 
+type pluralArgs = { take: number; skip: number; orderBy: OrderBy };
+type singleArgs = { id: number; take: number; skip: number; orderBy: OrderBy };
+
 export const ProductResolver = {
   Query: {
-    departments: (_parent: unknown, _args: unknown) => DepartmentService.getDepartments(),
-    department: (_parent: unknown, _args: { id: number }) => DepartmentService.getDepartment(_args),
+    departments: (_parent: unknown, _args: pluralArgs) => DepartmentService.getDepartments(_args),
+    department: (_parent: unknown, _args: singleArgs) => DepartmentService.getDepartment(_args),
 
-    departmentCategoriesByDepartment: (_parent: unknown, _args: { id: number }) =>
+    departmentCategoriesByDepartment: (_parent: unknown, _args: singleArgs) =>
       DepartmentCategoriesService.getDepartmentCategoriesByDepartment(_args),
-    departmentCategories: (_parent: unknown, _args: unknown) => DepartmentCategoriesService.getDepartmentCategories(),
-    departmentCategory: (_parent: unknown, _args: { id: number }) =>
+    departmentCategories: (_parent: unknown, _args: pluralArgs) =>
+      DepartmentCategoriesService.getDepartmentCategories(_args),
+    departmentCategory: (_parent: unknown, _args: singleArgs) =>
       DepartmentCategoriesService.getDepartmentCategory(_args),
 
-    productCategoriesByDepartmentCategory: (_parent: unknown, _args: { id: number }) =>
+    productCategoriesByDepartmentCategory: (_parent: unknown, _args: singleArgs) =>
       ProductCategoriesService.getProductCategoriesByDepartmentCategory(_args),
-    productCategories: (_parent: unknown, _args: unknown) => ProductCategoriesService.getProductCategories(),
-    productCategory: (_parent: unknown, _args: { id: number }) => ProductCategoriesService.getProductCategory(_args),
+    productCategories: (_parent: unknown, _args: pluralArgs) => ProductCategoriesService.getProductCategories(_args),
+    productCategory: (_parent: unknown, _args: singleArgs) => ProductCategoriesService.getProductCategory(_args),
 
-    products: (_parent: unknown, _args: unknown) => ProductService.getProducts(),
-    product: (_parent: unknown, _args: { id: number }) => ProductService.getProduct(_args),
-    productsByOwner: (_parent: unknown, _args: { id: string }) => ProductService.getProductsByOwner(_args),
+    products: (_parent: unknown, _args: pluralArgs) => ProductService.getProducts(_args),
+    product: (_parent: unknown, _args: singleArgs) => ProductService.getProduct(_args),
+    productsByOwner: (_parent: unknown, _args: { id: string; take: number; skip: number; orderBy: OrderBy }) =>
+      ProductService.getProductsByOwner(_args),
 
-    feedProducts: (_parent: unknown, _args: { limit: number; scope: "MARKET" | "STORE"; exchange: boolean }) =>
-      ProductService.getFeedProducts(_args),
+    feedProducts: (
+      _parent: unknown,
+      _args: { take: number; orderBy: OrderBy; scope: "MARKET" | "STORE"; exchange: boolean },
+    ) => ProductService.getFeedProducts(_args),
   },
   Mutation: {
     addProduct: (_parent: unknown, _args: Omit<Product, "id">) => ProductService.addProduct(_args),
@@ -35,15 +43,15 @@ export const ProductResolver = {
       ProductService.stockControl(_args),
   },
   Product: {
-    __resolveReference: (reference: { id: number }) => ProductService.getProduct(reference),
+    __resolveReference: (reference: singleArgs) => ProductService.getProduct(reference),
   },
   ProductCategory: {
-    __resolveReference: (reference: { id: number }) => ProductCategoriesService.getProductCategory(reference),
+    __resolveReference: (reference: singleArgs) => ProductCategoriesService.getProductCategory(reference),
   },
   DepartmentCategory: {
-    __resolveReference: (reference: { id: number }) => DepartmentCategoriesService.getDepartmentCategory(reference),
+    __resolveReference: (reference: singleArgs) => DepartmentCategoriesService.getDepartmentCategory(reference),
   },
   Department: {
-    __resolveReference: (reference: { id: number }) => DepartmentService.getDepartment(reference),
+    __resolveReference: (reference: singleArgs) => DepartmentService.getDepartment(reference),
   },
 };

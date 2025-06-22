@@ -1,9 +1,22 @@
 import prisma from "../../client/prisma";
 import { ErrorService } from "../../errors/errors";
+import { type OrderBy } from "../../types/general";
 import { type DepartmentCategory } from "../../types/product";
 
 export const DepartmentCategoriesService = {
-  getDepartmentCategories: async () => {
+  getDepartmentCategories: async ({
+    take = 20,
+    skip = 0,
+    orderBy,
+  }: {
+    take: number;
+    skip: number;
+    orderBy: OrderBy;
+  }) => {
+    const { field = "name", direction = "asc" } = orderBy || {};
+    const orderByClause = {
+      [field]: direction,
+    };
     const departmentCategories: DepartmentCategory[] = await prisma.departmentCategory.findMany({
       select: {
         id: true,
@@ -90,6 +103,9 @@ export const DepartmentCategoriesService = {
                   },
                 },
               },
+              orderBy: orderByClause, // Order products by the specified field and direction
+              take, // Limit to 5 products per category
+              skip, // You can adjust this for pagination
             },
           },
         },
@@ -102,7 +118,21 @@ export const DepartmentCategoriesService = {
 
     return departmentCategories;
   },
-  getDepartmentCategory: async ({ id }: { id: number }) => {
+  getDepartmentCategory: async ({
+    id,
+    take = 20,
+    skip = 0,
+    orderBy,
+  }: {
+    id: number;
+    take: number;
+    skip: number;
+    orderBy: OrderBy;
+  }) => {
+    const { field = "name", direction = "asc" } = orderBy || {};
+    const orderByClause = {
+      [field]: direction,
+    };
     const parsedId = Number(id);
     const departmentCategory: DepartmentCategory | null = await prisma.departmentCategory.findUnique({
       where: { id: parsedId },
@@ -191,6 +221,9 @@ export const DepartmentCategoriesService = {
                   },
                 },
               },
+              orderBy: orderByClause, // Order products by the specified field and direction
+              take, // Limit to 5 products per category
+              skip, // You can adjust this for pagination
             },
           },
         },
@@ -199,7 +232,21 @@ export const DepartmentCategoriesService = {
 
     return departmentCategory;
   },
-  getDepartmentCategoriesByDepartment: async ({ id }: { id: number }) => {
+  getDepartmentCategoriesByDepartment: async ({
+    id,
+    take = 20,
+    skip = 0,
+    orderBy,
+  }: {
+    id: number;
+    take: number;
+    skip: number;
+    orderBy: OrderBy;
+  }) => {
+    const { field = "name", direction = "asc" } = orderBy || {};
+    const orderByClause = {
+      [field]: direction,
+    };
     const parsedId = Number(id);
 
     const departmentCategories: DepartmentCategory[] = await prisma.departmentCategory.findMany({
@@ -289,6 +336,9 @@ export const DepartmentCategoriesService = {
                   },
                 },
               },
+              orderBy: orderByClause, // Order products by the specified field and direction
+              take, // Limit to 5 products per category
+              skip, // You can adjust this for pagination
             },
           },
         },

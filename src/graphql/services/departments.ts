@@ -1,9 +1,14 @@
 import prisma from "../../client/prisma";
 import { ErrorService } from "../../errors/errors";
+import { type OrderBy } from "../../types/general";
 import { type Department } from "../../types/product";
 
 export const DepartmentService = {
-  getDepartments: async () => {
+  getDepartments: async ({ take = 20, skip = 0, orderBy }: { take: number; skip: number; orderBy: OrderBy }) => {
+    const { field = "name", direction = "asc" } = orderBy || {};
+    const orderByClause = {
+      [field]: direction,
+    };
     const departments: Department[] = await prisma.department.findMany({
       select: {
         id: true,
@@ -108,6 +113,9 @@ export const DepartmentService = {
                       },
                     },
                   },
+                  orderBy: orderByClause, // Order products by the specified field and direction
+                  take, // Limit to 5 products per category
+                  skip, // You can adjust this for pagination
                 },
               },
             },
@@ -122,7 +130,21 @@ export const DepartmentService = {
 
     return departments;
   },
-  getDepartment: async ({ id }: { id: number }) => {
+  getDepartment: async ({
+    id,
+    take = 20,
+    skip = 0,
+    orderBy,
+  }: {
+    id: number;
+    take: number;
+    skip: number;
+    orderBy: OrderBy;
+  }) => {
+    const { field = "name", direction = "asc" } = orderBy || {};
+    const orderByClause = {
+      [field]: direction,
+    };
     const parsedId = Number(id);
     const department: Department | null = await prisma.department.findUnique({
       where: { id: parsedId },
@@ -229,6 +251,9 @@ export const DepartmentService = {
                       },
                     },
                   },
+                  orderBy: orderByClause, // Order products by the specified field and direction
+                  take, // Limit to 5 products per category
+                  skip, // You can adjust this for pagination
                 },
               },
             },
