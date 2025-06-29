@@ -34,6 +34,8 @@ export const ProductResolver = {
       _parent: unknown,
       _args: { take: number; orderBy: OrderBy; scope: "MARKET" | "STORE"; exchange: boolean },
     ) => ProductService.getFeedProducts(_args),
+
+    myFavorites: (_parent: unknown, _args: { userId: string }) => ProductService.getMyFavorites(_args),
   },
   Mutation: {
     addProduct: (_parent: unknown, _args: Omit<Product, "id">) => ProductService.addProduct(_args),
@@ -41,6 +43,7 @@ export const ProductResolver = {
     deleteProduct: (_parent: unknown, _args: { id: number }) => ProductService.deleteProduct(_args),
     stockControl: (_parent: unknown, _args: { id: number; quantity: number; operation: string }) =>
       ProductService.stockControl(_args),
+    likeProduct: (_parent: unknown, _args: { id: number; userId: string }) => ProductService.toggleLikeProduct(_args),
   },
   Product: {
     __resolveReference: (reference: singleArgs) => ProductService.getProduct(reference),

@@ -37,4 +37,4 @@ export type Badge =
   | "IN_MID_POINT_PICKUP";
 export type ContactMethod = "EMAIL" | "WHATSAPP" | "ALL";
 export type WeightUnit = "KG" | "LB" | "OZ" | "G";
-export type ProductSize = "SMALL" | "MEDIUM" | "LARGE";
+export type ProductSize = "XS" | "S" | "M" | "L" | "XL";

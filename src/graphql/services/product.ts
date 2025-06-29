@@ -48,11 +48,59 @@ export const ProductService = {
             productCategoryName: true,
             departmentCategoryId: true,
             keywords: true,
-            materialImpactEstimateId: true,
             size: true,
-            minWeight: true,
-            maxWeight: true,
             weightUnit: true,
+            averageWeight: true,
+            firstMaterialTypeId: true,
+            firstMaterialTypeQuantity: true,
+            firstMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
+            secondMaterialTypeId: true,
+            secondMaterialTypeQuantity: true,
+            secondMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
+            thirdMaterialTypeId: true,
+            thirdMaterialTypeQuantity: true,
+            thirdMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
+            fourthMaterialTypeId: true,
+            fourthMaterialTypeQuantity: true,
+            fourthMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
+            fifthMaterialTypeId: true,
+            fifthMaterialTypeQuantity: true,
+            fifthMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
             departmentCategory: {
               select: {
                 id: true,
@@ -140,11 +188,59 @@ export const ProductService = {
             productCategoryName: true,
             departmentCategoryId: true,
             keywords: true,
-            materialImpactEstimateId: true,
             size: true,
-            minWeight: true,
-            maxWeight: true,
             weightUnit: true,
+            averageWeight: true,
+            firstMaterialTypeId: true,
+            firstMaterialTypeQuantity: true,
+            firstMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
+            secondMaterialTypeId: true,
+            secondMaterialTypeQuantity: true,
+            secondMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
+            thirdMaterialTypeId: true,
+            thirdMaterialTypeQuantity: true,
+            thirdMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
+            fourthMaterialTypeId: true,
+            fourthMaterialTypeQuantity: true,
+            fourthMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
+            fifthMaterialTypeId: true,
+            fifthMaterialTypeQuantity: true,
+            fifthMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
             departmentCategory: {
               select: {
                 id: true,
@@ -243,11 +339,59 @@ export const ProductService = {
             productCategoryName: true,
             departmentCategoryId: true,
             keywords: true,
-            materialImpactEstimateId: true,
             size: true,
-            minWeight: true,
-            maxWeight: true,
             weightUnit: true,
+            averageWeight: true,
+            firstMaterialTypeId: true,
+            firstMaterialTypeQuantity: true,
+            firstMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
+            secondMaterialTypeId: true,
+            secondMaterialTypeQuantity: true,
+            secondMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
+            thirdMaterialTypeId: true,
+            thirdMaterialTypeQuantity: true,
+            thirdMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
+            fourthMaterialTypeId: true,
+            fourthMaterialTypeQuantity: true,
+            fourthMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
+            fifthMaterialTypeId: true,
+            fifthMaterialTypeQuantity: true,
+            fifthMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
             departmentCategory: {
               select: {
                 id: true,
@@ -344,11 +488,59 @@ export const ProductService = {
             productCategoryName: true,
             departmentCategoryId: true,
             keywords: true,
-            materialImpactEstimateId: true,
             size: true,
-            minWeight: true,
-            maxWeight: true,
             weightUnit: true,
+            averageWeight: true,
+            firstMaterialTypeId: true,
+            firstMaterialTypeQuantity: true,
+            firstMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
+            secondMaterialTypeId: true,
+            secondMaterialTypeQuantity: true,
+            secondMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
+            thirdMaterialTypeId: true,
+            thirdMaterialTypeQuantity: true,
+            thirdMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
+            fourthMaterialTypeId: true,
+            fourthMaterialTypeQuantity: true,
+            fourthMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
+            fifthMaterialTypeId: true,
+            fifthMaterialTypeQuantity: true,
+            fifthMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
             departmentCategory: {
               select: {
                 id: true,
@@ -393,6 +585,149 @@ export const ProductService = {
       },
       take,
       orderBy: { createdAt: "desc" },
+    });
+
+    if (!products) {
+      return new ErrorService.NotFoundError("No se encontraron productos");
+    }
+
+    return products;
+  },
+  getMyFavorites: async ({ userId }: { userId: string }) => {
+    const products: Product[] = await prisma.product.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            surnames: true,
+            profileImage: true,
+            isCompany: true,
+            businessName: true,
+            phone: true,
+            address: true,
+            county: {
+              select: {
+                id: true,
+                county: true,
+              },
+            },
+            city: {
+              select: {
+                id: true,
+                city: true,
+              },
+            },
+            region: {
+              select: {
+                id: true,
+                region: true,
+              },
+            },
+          },
+        },
+        productCategory: {
+          select: {
+            id: true,
+            productCategoryName: true,
+            departmentCategoryId: true,
+            keywords: true,
+            size: true,
+            weightUnit: true,
+            averageWeight: true,
+            firstMaterialTypeId: true,
+            firstMaterialTypeQuantity: true,
+            firstMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
+            secondMaterialTypeId: true,
+            secondMaterialTypeQuantity: true,
+            secondMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
+            thirdMaterialTypeId: true,
+            thirdMaterialTypeQuantity: true,
+            thirdMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
+            fourthMaterialTypeId: true,
+            fourthMaterialTypeQuantity: true,
+            fourthMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
+            fifthMaterialTypeId: true,
+            fifthMaterialTypeQuantity: true,
+            fifthMaterialType: {
+              select: {
+                id: true,
+                materialType: true,
+                estimatedCo2SavingsKG: true,
+                estimatedWaterSavingsLT: true,
+              },
+            },
+            departmentCategory: {
+              select: {
+                id: true,
+                departmentCategoryName: true,
+                departmentId: true,
+                department: {
+                  select: {
+                    id: true,
+                    departmentName: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        comments: {
+          select: {
+            id: true,
+            comment: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                businessName: true,
+              },
+            },
+          },
+        },
+        likes: {
+          select: {
+            id: true,
+            userId: true,
+          },
+        },
+      },
+      where: {
+        likes: {
+          some: {
+            userId,
+          },
+        },
+      },
     });
 
     if (!products) {
@@ -537,5 +872,62 @@ export const ProductService = {
     } else {
       return new ErrorService.BadRequestError("Operación no válida");
     }
+  },
+  likeProduct: async ({ id, userId }: { id: number; userId: string }) => {
+    console.log("Liking product with ID:", id, "by user:", userId);
+
+    const productLike = await prisma.productLike.create({
+      data: {
+        productId: Number(id),
+        userId,
+      },
+    });
+
+    if (!productLike) {
+      return new ErrorService.InternalServerError("Error al dar like al producto");
+    }
+
+    return productLike;
+  },
+  unlikeProduct: async ({ id, userId }: { id: number; userId: string }) => {
+    const productLike = await prisma.productLike.delete({
+      where: {
+        id: Number(id),
+        userId,
+      },
+    });
+
+    if (!productLike) {
+      return new ErrorService.InternalServerError("Error al quitar like al producto");
+    }
+
+    return true;
+  },
+  toggleLikeProduct: async ({ id, userId }: { id: number; userId: string }) => {
+    // Check if the like already exists
+    const existingLike = await prisma.productLike.findFirst({
+      where: {
+        productId: Number(id),
+        userId,
+      },
+    });
+
+    if (existingLike) {
+      // Unlike (remove the like)
+      await prisma.productLike.delete({
+        where: { id: existingLike.id },
+      });
+    } else {
+      // Like (create the like)
+      await prisma.productLike.create({
+        data: {
+          productId: Number(id),
+          userId,
+        },
+      });
+    }
+
+    // Return the updated product with likes
+    return ProductService.getProduct({ id: Number(id) });
   },
 };

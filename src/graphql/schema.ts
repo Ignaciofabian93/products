@@ -93,7 +93,6 @@ export const typeDefs = gql`
   type ProductLike {
     id: ID!
     userId: String!
-    user: User
   }
 
   type ProductComment {
@@ -161,6 +160,8 @@ export const typeDefs = gql`
     productsByOwner(id: ID!, take: Int, skip: Int, orderBy: OrderByInput): [Product]
 
     feedProducts(take: Int!, scope: Scope!, exchange: Boolean): [Product]
+
+    myFavorites(userId: ID!): [Product]
   }
 
   extend type Mutation {
@@ -210,5 +211,6 @@ export const typeDefs = gql`
       userId: String!
     ): Product
     deleteProduct(id: ID!): Product
+    likeProduct(id: ID!, userId: ID!): Product
   }
 `;
