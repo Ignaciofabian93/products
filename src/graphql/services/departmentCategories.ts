@@ -50,7 +50,13 @@ export const DepartmentCategoriesService = {
               skip, // You can adjust this for pagination
             },
           },
+          orderBy: {
+            productCategoryName: "asc",
+          },
         },
+      },
+      orderBy: {
+        departmentCategoryName: "asc",
       },
     });
 
@@ -103,6 +109,9 @@ export const DepartmentCategoriesService = {
               skip, // You can adjust this for pagination
             },
           },
+          orderBy: {
+            productCategoryName: "asc",
+          },
         },
       },
     });
@@ -153,7 +162,13 @@ export const DepartmentCategoriesService = {
               skip, // You can adjust this for pagination
             },
           },
+          orderBy: {
+            productCategoryName: "asc",
+          },
         },
+      },
+      orderBy: {
+        departmentCategoryName: "asc",
       },
     });
 

@@ -1,9 +1,6 @@
 export const departmentSelect = {
   id: true,
   departmentName: true,
-  orderBy: {
-    departmentName: "asc",
-  },
 };
 
 export const materialTypeSelect = {
@@ -36,9 +33,6 @@ export const productCategorySelect = {
   fifthMaterialTypeId: true,
   fifthMaterialTypeQuantity: true,
   fifthMaterialType: { select: materialTypeSelect },
-  orderBy: {
-    productCategoryName: "asc",
-  },
 };
 
 export const userSelect = {

@@ -58,9 +58,6 @@ export const productCategorySelect = {
   fifthMaterialTypeId: true,
   fifthMaterialTypeQuantity: true,
   fifthMaterialType: { select: materialTypeSelect },
-  orderBy: {
-    productCategoryName: "asc",
-  },
 };
 
 export const productSelect = {
@@ -95,11 +92,5 @@ export const departmentCategorySelect = {
       id: true,
       departmentName: true,
     },
-    orderBy: {
-      departmentName: "asc",
-    },
-  },
-  orderBy: {
-    departmentCategoryName: "asc",
   },
 };

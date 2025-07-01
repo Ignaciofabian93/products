@@ -82,6 +82,7 @@ export const DepartmentService = {
           select: {
             id: true,
             departmentCategoryName: true,
+            departmentId: true,
             productCategories: {
               select: {
                 ...productCategorySelect,
