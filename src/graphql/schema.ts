@@ -44,6 +44,21 @@ export const typeDefs = gql`
     IN_MID_POINT_PICKUP
   }
 
+  enum ProductSize {
+    XS
+    S
+    M
+    L
+    XL
+  }
+
+  enum WeightUnit {
+    KG
+    LB
+    OZ
+    G
+  }
+
   extend type User @key(fields: "id") {
     id: ID! @external
   }
@@ -51,27 +66,40 @@ export const typeDefs = gql`
   type MaterialImpactEstimate @key(fields: "id") {
     id: ID!
     materialType: String!
-    minWeight: Int
-    maxWeight: Int
-    estimatedCo2SavingsKG: Int
-    estimatedWaterSavingsLT: Int
-    estimatedWasteSavingsKG: Int
-    notes: String
+    estimatedCo2SavingsKG: Float
+    estimatedWaterSavingsLT: Float
+    firstMaterialTypeFor: [ProductCategory]
+    secondMaterialTypeFor: [ProductCategory]
+    thirdMaterialTypeFor: [ProductCategory]
+    fourthMaterialTypeFor: [ProductCategory]
+    fifthMaterialTypeFor: [ProductCategory]
   }
 
   type ProductCategory @key(fields: "id") {
     id: ID!
     productCategoryName: String!
-    keywords: [String]
-    materialImpactEstimateId: Int
-    materialImpactEstimate: MaterialImpactEstimate
-    size: String
-    minWeight: Int
-    maxWeight: Int
-    weightUnit: String
-    products: [Product]
     departmentCategoryId: Int!
     departmentCategory: DepartmentCategory
+    keywords: [String]
+    averageWeight: Float
+    firstMaterialTypeId: Int
+    firstMaterialTypeQuantity: Float
+    secondMaterialTypeId: Int
+    secondMaterialTypeQuantity: Float
+    thirdMaterialTypeId: Int
+    thirdMaterialTypeQuantity: Float
+    fourthMaterialTypeId: Int
+    fourthMaterialTypeQuantity: Float
+    fifthMaterialTypeId: Int
+    fifthMaterialTypeQuantity: Float
+    size: ProductSize
+    weightUnit: WeightUnit
+    products: [Product]
+    firstMaterialType: MaterialImpactEstimate
+    secondMaterialType: MaterialImpactEstimate
+    thirdMaterialType: MaterialImpactEstimate
+    fourthMaterialType: MaterialImpactEstimate
+    fifthMaterialType: MaterialImpactEstimate
   }
 
   type DepartmentCategory @key(fields: "id") {
@@ -143,6 +171,8 @@ export const typeDefs = gql`
   }
 
   extend type Query {
+    marketCatalog: [Department]
+
     departments(take: Int, skip: Int, orderBy: OrderByInput): [Department]
     department(id: ID!, take: Int, skip: Int, orderBy: OrderByInput): Department
 
@@ -157,10 +187,9 @@ export const typeDefs = gql`
     productsByProductCategory(id: ID!, take: Int, skip: Int, orderBy: OrderByInput): [Product]
     products(take: Int, skip: Int, orderBy: OrderByInput): [Product]
     product(id: ID!): Product
+
     productsByOwner(id: ID!, take: Int, skip: Int, orderBy: OrderByInput): [Product]
-
     feedProducts(take: Int!, scope: Scope!, exchange: Boolean): [Product]
-
     myFavorites(userId: ID!): [Product]
   }
 
