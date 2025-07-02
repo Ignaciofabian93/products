@@ -54,7 +54,7 @@ model User {
   name                   String?
   surnames               String?
   email                  String           @unique
-  businessName           String?          @unique
+  businessName           String?          
   password               String
   profileImage           String?
   birthday               String           @default("")
