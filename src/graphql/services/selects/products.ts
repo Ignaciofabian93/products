@@ -44,12 +44,6 @@ export const departmentCategorySelect = {
       id: true,
       departmentName: true,
     },
-    orderBy: {
-      departmentName: "asc",
-    },
-  },
-  orderBy: {
-    departmentCategoryName: "asc",
   },
 };
 
@@ -77,9 +71,6 @@ export const productCategorySelect = {
   fifthMaterialTypeQuantity: true,
   fifthMaterialType: { select: materialTypeSelect },
   departmentCategory: { select: departmentCategorySelect },
-  orderBy: {
-    productCategoryName: "asc",
-  },
 };
 
 export const commentSelect = {

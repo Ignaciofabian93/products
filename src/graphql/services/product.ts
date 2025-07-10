@@ -100,49 +100,54 @@ export const ProductService = {
     skip: number;
     orderBy: OrderBy;
   }) => {
-    const { field = "name", direction = "asc" } = orderBy || {};
-    const orderByClause = { [field]: direction };
-    const products: Product[] = await prisma.product.findMany({
-      select: {
-        id: true,
-        sku: true,
-        barcode: true,
-        color: true,
-        brand: true,
-        name: true,
-        description: true,
-        price: true,
-        images: true,
-        hasOffer: true,
-        offerPrice: true,
-        stock: true,
-        isExchangeable: true,
-        ratingCount: true,
-        reviewsNumber: true,
-        badges: true,
-        interests: true,
-        isActive: true,
-        ratings: true,
-        userId: true,
-        createdAt: true,
-        updatedAt: true,
-        productCategoryId: true,
-        user: { select: userSelect },
-        productCategory: { select: productCategorySelect },
-        comments: { select: commentSelect },
-        likes: { select: likeSelect },
-      },
-      orderBy: orderByClause,
-      take,
-      skip,
-      where: { userId: id },
-    });
+    try {
+      const { field = "name", direction = "asc" } = orderBy || {};
+      const orderByClause = { [field]: direction };
+      const products: Product[] = await prisma.product.findMany({
+        select: {
+          id: true,
+          sku: true,
+          barcode: true,
+          color: true,
+          brand: true,
+          name: true,
+          description: true,
+          price: true,
+          images: true,
+          hasOffer: true,
+          offerPrice: true,
+          stock: true,
+          isExchangeable: true,
+          ratingCount: true,
+          reviewsNumber: true,
+          badges: true,
+          interests: true,
+          isActive: true,
+          ratings: true,
+          userId: true,
+          createdAt: true,
+          updatedAt: true,
+          productCategoryId: true,
+          user: { select: userSelect },
+          productCategory: { select: productCategorySelect },
+          comments: { select: commentSelect },
+          likes: { select: likeSelect },
+        },
+        orderBy: orderByClause,
+        take,
+        skip,
+        where: { userId: id },
+      });
 
-    if (!products) {
-      return new ErrorService.NotFoundError("No se encontraron productos");
+      if (!products) {
+        return new ErrorService.NotFoundError("No se encontraron productos");
+      }
+
+      return products;
+    } catch (error) {
+      console.error("Error al obtener los productos del propietario:", error);
+      return new ErrorService.InternalServerError("Error al obtener los productos del propietario");
     }
-
-    return products;
   },
   getFeedProducts: async ({
     take = 20,
@@ -249,14 +254,15 @@ export const ProductService = {
     name,
     description,
     price,
+    images,
     hasOffer,
     offerPrice,
     stock,
-    isActive,
     isExchangeable,
-    badges,
-    images,
+    interests,
+    isActive,
     userId,
+    badges,
     productCategoryId,
   }: Omit<Product, "id">) => {
     const product: Product = await prisma.product.create({
@@ -276,6 +282,7 @@ export const ProductService = {
         badges,
         images,
         userId,
+        interests: interests || [],
         productCategoryId,
       },
     });

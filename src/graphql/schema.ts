@@ -160,6 +160,24 @@ export const typeDefs = gql`
     likes: [ProductLike]
   }
 
+  type Co2ImpactMessage {
+    id: ID!
+    min: Float
+    max: Float
+    message1: String
+    message2: String
+    message3: String
+  }
+
+  type WaterImpactMessage {
+    id: ID!
+    min: Float
+    max: Float
+    message1: String
+    message2: String
+    message3: String
+  }
+
   enum SortDirection {
     asc
     desc
@@ -191,6 +209,9 @@ export const typeDefs = gql`
     productsByOwner(id: ID!, take: Int, skip: Int, orderBy: OrderByInput): [Product]
     feedProducts(take: Int!, scope: Scope!, exchange: Boolean): [Product]
     myFavorites(userId: ID!): [Product]
+
+    co2ImpactMessages(value: Float): Co2ImpactMessage
+    waterImpactMessages(value: Float): WaterImpactMessage
   }
 
   extend type Mutation {

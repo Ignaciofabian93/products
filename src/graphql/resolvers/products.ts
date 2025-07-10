@@ -3,6 +3,7 @@ import { type Product } from "../../types/product";
 import { CatalogService } from "../services/catalog";
 import { DepartmentCategoriesService } from "../services/departmentCategories";
 import { DepartmentService } from "../services/departments";
+import { ImpactsService } from "../services/impacts";
 import { ProductService } from "../services/product";
 import { ProductCategoriesService } from "../services/productCategories";
 
@@ -37,6 +38,9 @@ export const ProductResolver = {
       _args: { take: number; orderBy: OrderBy; scope: "MARKET" | "STORE"; exchange: boolean },
     ) => ProductService.getFeedProducts(_args),
     myFavorites: (_parent: unknown, _args: { userId: string }) => ProductService.getMyFavorites(_args),
+
+    co2ImpactMessages: (_parent: unknown, _args: { value: number }) => ImpactsService.getCo2ImpactMessages(_args),
+    waterImpactMessages: (_parent: unknown, _args: { value: number }) => ImpactsService.getWaterImpactMessages(_args),
   },
   Mutation: {
     addProduct: (_parent: unknown, _args: Omit<Product, "id">) => ProductService.addProduct(_args),
