@@ -1,46 +1,41 @@
 import prisma from "../../client/prisma";
 import { ErrorService } from "../../errors/errors";
-import { type OrderBy } from "../../types/general";
+import { type PaginationProps } from "../../types/general";
 import { type ProductCategory } from "../../types/product";
 import { departmentCategorySelect, productCategorySelect, productSelect } from "./selects/productCategories";
 
 export const ProductCategoriesService = {
-  getProductCategories: async ({ take = 20, skip = 0, orderBy }: { take: number; skip: number; orderBy: OrderBy }) => {
-    const { field = "name", direction = "asc" } = orderBy || {};
-    const orderByClause = { [field]: direction };
-    const productCategories: ProductCategory[] = await prisma.productCategory.findMany({
-      select: {
-        ...productCategorySelect,
-        products: {
-          select: productSelect,
-          orderBy: orderByClause,
-          take,
-          skip,
+  getProductCategories: async ({ take = 20, skip = 0, orderBy }: PaginationProps) => {
+    try {
+      const { field = "name", direction = "asc" } = orderBy || {};
+      const orderByClause = { [field]: direction };
+      const productCategories: ProductCategory[] = await prisma.productCategory.findMany({
+        select: {
+          ...productCategorySelect,
+          products: {
+            select: productSelect,
+            orderBy: orderByClause,
+            take,
+            skip,
+          },
         },
-      },
-      orderBy: {
-        productCategoryName: "asc",
-      },
-    });
+        orderBy: {
+          productCategoryName: "asc",
+        },
+      });
 
-    if (!productCategories.length) {
-      return new ErrorService.NotFoundError("No se encontraron categorías");
+      if (!productCategories.length) {
+        return new ErrorService.NotFoundError("No se encontraron categorías");
+      }
+
+      return productCategories;
+    } catch (error) {
+      console.error("Error al obtener las categorías de producto:", error);
+      return new ErrorService.InternalServerError("Error al obtener las categorías de producto");
     }
-
-    return productCategories;
   },
 
-  getProductCategory: async ({
-    id,
-    take = 20,
-    skip = 0,
-    orderBy,
-  }: {
-    id: number;
-    take: number;
-    skip: number;
-    orderBy: OrderBy;
-  }) => {
+  getProductCategory: async ({ id, take = 20, skip = 0, orderBy }: { id: number } & PaginationProps) => {
     try {
       const { field = "name", direction = "asc" } = orderBy || {};
       const orderByClause = { [field]: direction };
@@ -77,35 +72,37 @@ export const ProductCategoriesService = {
     take = 20,
     skip = 0,
     orderBy,
-  }: {
-    id: number;
-    take: number;
-    skip: number;
-    orderBy: OrderBy;
-  }) => {
-    const { field = "name", direction = "asc" } = orderBy || {};
-    const orderByClause = { [field]: direction };
-    const parsedId = Number(id);
-    const productCategories: ProductCategory[] = await prisma.productCategory.findMany({
-      select: {
-        ...productCategorySelect,
-        products: {
-          select: productSelect,
-          orderBy: orderByClause,
-          take,
-          skip,
+  }: { id: number } & PaginationProps) => {
+    try {
+      const { field = "name", direction = "asc" } = orderBy || {};
+      const orderByClause = { [field]: direction };
+      const parsedId = Number(id);
+      const productCategories: ProductCategory[] = await prisma.productCategory.findMany({
+        select: {
+          ...productCategorySelect,
+          products: {
+            select: productSelect,
+            orderBy: orderByClause,
+            take,
+            skip,
+          },
         },
-      },
-      orderBy: {
-        productCategoryName: "asc",
-      },
-      where: { departmentCategoryId: parsedId },
-    });
+        orderBy: {
+          productCategoryName: "asc",
+        },
+        where: { departmentCategoryId: parsedId },
+      });
 
-    if (!productCategories.length) {
-      return new ErrorService.NotFoundError("No se encontraron categorías");
+      if (!productCategories.length) {
+        return new ErrorService.NotFoundError("No se encontraron categorías");
+      }
+
+      return productCategories;
+    } catch (error) {
+      console.error("Error al obtener las categorías de producto por categoría de departamento:", error);
+      return new ErrorService.InternalServerError(
+        "Error al obtener las categorías de producto por categoría de departamento",
+      );
     }
-
-    return productCategories;
   },
 };

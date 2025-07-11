@@ -46,8 +46,6 @@ export const ProductResolver = {
     addProduct: (_parent: unknown, _args: Omit<Product, "id">) => ProductService.addProduct(_args),
     updateProduct: (_parent: unknown, _args: Product) => ProductService.updateProduct(_args),
     deleteProduct: (_parent: unknown, _args: { id: number }) => ProductService.deleteProduct(_args),
-    stockControl: (_parent: unknown, _args: { id: number; quantity: number; operation: string }) =>
-      ProductService.stockControl(_args),
     likeProduct: (_parent: unknown, _args: { id: number; userId: string }) => ProductService.toggleLikeProduct(_args),
   },
   Product: {
