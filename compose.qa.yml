@@ -1,8 +1,8 @@
 services:
-  products:
+  products_qa:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.qa
     restart: always
     container_name: products_subgraph_qa
     ports:
