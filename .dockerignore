@@ -1,8 +1,5 @@
 node_modules
-dist
 .vscode
-.env
-.env.*
 *.log
 npm-debug.log
 Dockerfile*
@@ -15,5 +12,4 @@ deploy*.bash
 .npmrc
 cspell.config.yaml
 .prettierrc
-tsconfig.json
 eslint.config.js
