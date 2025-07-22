@@ -36,8 +36,15 @@ export const ProductResolver = {
     feedProducts: (
       _parent: unknown,
       _args: { take: number; orderBy: OrderBy; scope: "MARKET" | "STORE"; exchange: boolean },
-    ) => ProductService.getFeedProducts(_args),
-    myFavorites: (_parent: unknown, _args: { userId: string }) => ProductService.getMyFavorites(_args),
+      context: { userId?: string },
+    ) => ProductService.getFeedProducts({ ..._args, userId: context.userId }),
+    myFavorites: (_parent: unknown, _args: unknown, context: { userId?: string }) =>
+      ProductService.getMyFavorites({ userId: context.userId }),
+    myProducts: (
+      _parent: unknown,
+      _args: { take: number; skip: number; orderBy: OrderBy },
+      context: { userId?: string },
+    ) => ProductService.getMyProducts({ ..._args, userId: context.userId }),
 
     co2ImpactMessages: (_parent: unknown, _args: { value: number }) => ImpactsService.getCo2ImpactMessages(_args),
     waterImpactMessages: (_parent: unknown, _args: { value: number }) => ImpactsService.getWaterImpactMessages(_args),

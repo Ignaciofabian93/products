@@ -1,4 +1,5 @@
 import express from "express";
+import jwt from "jsonwebtoken";
 import { ApolloServer } from "@apollo/server";
 import { buildSubgraphSchema } from "@apollo/subgraph";
 import { expressMiddleware } from "@apollo/server/express4";
@@ -33,7 +34,16 @@ app.use(
     context: async ({ req, res }) => {
       const auth = req.headers.authorization;
       const token = auth?.startsWith("Bearer ") ? auth.split(" ")[1] : undefined;
-      return { req, res, token };
+      let userId: string | undefined;
+      if (token) {
+        try {
+          const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: string };
+          userId = decoded.userId;
+        } catch (error) {
+          console.error("Error al verificar el token:", error);
+        }
+      }
+      return { req, res, userId };
     },
   }),
 );

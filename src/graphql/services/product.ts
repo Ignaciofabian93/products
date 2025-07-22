@@ -153,11 +153,15 @@ export const ProductService = {
     take = 20,
     scope = "MARKET",
     exchange,
+    userId,
   }: {
     take?: number;
     scope: "MARKET" | "STORE";
     exchange: boolean;
+    userId?: string;
   }) => {
+    console.log("getFeedProducts called with:", { take, scope, exchange, userId });
+
     try {
       const isCompany = scope === "STORE";
       const products = await prisma.product.findMany({
@@ -193,7 +197,7 @@ export const ProductService = {
         where: {
           isActive: true,
           isExchangeable: exchange,
-          user: { isCompany },
+          user: { isCompany, id: userId ? { not: userId } : undefined },
         },
         take,
         orderBy: { createdAt: "desc" },
@@ -209,7 +213,7 @@ export const ProductService = {
       return new ErrorService.InternalServerError("Error al obtener los productos del feed");
     }
   },
-  getMyFavorites: async ({ userId }: { userId: string }) => {
+  getMyFavorites: async ({ userId }: { userId: string | undefined }) => {
     try {
       const products: Product[] = await prisma.product.findMany({
         select: {
@@ -254,6 +258,27 @@ export const ProductService = {
     } catch (error) {
       console.error("Error al obtener los productos favoritos:", error);
       return new ErrorService.InternalServerError("Error al obtener los productos favoritos");
+    }
+  },
+  getMyProducts: async ({ userId, take, skip, orderBy }: { userId: string | undefined } & PaginationProps) => {
+    try {
+      const { field = "name", direction = "asc" } = orderBy || {};
+      const orderByClause = { [field]: direction };
+      const products: Product[] = await prisma.product.findMany({
+        where: { userId },
+        take,
+        skip,
+        orderBy: orderByClause,
+      });
+
+      if (!products) {
+        return new ErrorService.NotFoundError("No se encontraron productos");
+      }
+
+      return products;
+    } catch (error) {
+      console.error("Error al obtener los productos del usuario:", error);
+      return new ErrorService.InternalServerError("Error al obtener los productos del usuario");
     }
   },
   addProduct: async ({

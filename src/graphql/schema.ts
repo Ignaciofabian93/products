@@ -208,7 +208,8 @@ export const typeDefs = gql`
 
     productsByOwner(id: ID!, take: Int, skip: Int, orderBy: OrderByInput): [Product]
     feedProducts(take: Int!, scope: Scope!, exchange: Boolean): [Product]
-    myFavorites(userId: ID!): [Product]
+    myFavorites: [Product]
+    myProducts(take: Int, skip: Int, orderBy: OrderByInput): [Product]
 
     co2ImpactMessages(value: Float): Co2ImpactMessage
     waterImpactMessages(value: Float): WaterImpactMessage
