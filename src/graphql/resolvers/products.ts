@@ -31,20 +31,15 @@ export const ProductResolver = {
     products: (_parent: unknown, _args: pluralArgs) => ProductService.getProducts(_args),
     product: (_parent: unknown, _args: singleArgs) => ProductService.getProduct(_args),
 
-    productsByOwner: (_parent: unknown, _args: { id: string; take: number; skip: number; orderBy: OrderBy }) =>
+    productsByOwner: (_parent: unknown, _args: { userId: string; take: number; skip: number; orderBy: OrderBy }) =>
       ProductService.getProductsByOwner(_args),
     feedProducts: (
       _parent: unknown,
-      _args: { take: number; orderBy: OrderBy; scope: "MARKET" | "STORE"; exchange: boolean },
-      context: { userId?: string },
-    ) => ProductService.getFeedProducts({ ..._args, userId: context.userId }),
-    myFavorites: (_parent: unknown, _args: unknown, context: { userId?: string }) =>
-      ProductService.getMyFavorites({ userId: context.userId }),
-    myProducts: (
-      _parent: unknown,
-      _args: { take: number; skip: number; orderBy: OrderBy },
-      context: { userId?: string },
-    ) => ProductService.getMyProducts({ ..._args, userId: context.userId }),
+      _args: { userId: string; take: number; orderBy: OrderBy; scope: "MARKET" | "STORE"; exchange: boolean },
+    ) => ProductService.getFeedProducts({ ..._args }),
+    myFavorites: (_parent: unknown, _args: { userId: string }) => ProductService.getMyFavorites({ ..._args }),
+    myProducts: (_parent: unknown, _args: { userId: string; take: number; skip: number; orderBy: OrderBy }) =>
+      ProductService.getMyProducts({ ..._args }),
 
     co2ImpactMessages: (_parent: unknown, _args: { value: number }) => ImpactsService.getCo2ImpactMessages(_args),
     waterImpactMessages: (_parent: unknown, _args: { value: number }) => ImpactsService.getWaterImpactMessages(_args),

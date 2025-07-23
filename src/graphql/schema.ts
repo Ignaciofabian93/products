@@ -206,10 +206,10 @@ export const typeDefs = gql`
     products(take: Int, skip: Int, orderBy: OrderByInput): [Product]
     product(id: ID!): Product
 
-    productsByOwner(id: ID!, take: Int, skip: Int, orderBy: OrderByInput): [Product]
-    feedProducts(take: Int!, scope: Scope!, exchange: Boolean): [Product]
-    myFavorites: [Product]
-    myProducts(take: Int, skip: Int, orderBy: OrderByInput): [Product]
+    productsByOwner(userId: ID!, take: Int, skip: Int, orderBy: OrderByInput): [Product]
+    feedProducts(userId: ID!, take: Int!, scope: Scope!, exchange: Boolean): [Product]
+    myFavorites(userId: ID!): [Product]
+    myProducts(userId: ID!, take: Int, skip: Int, orderBy: OrderByInput): [Product]
 
     co2ImpactMessages(value: Float): Co2ImpactMessage
     waterImpactMessages(value: Float): WaterImpactMessage

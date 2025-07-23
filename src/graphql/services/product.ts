@@ -99,7 +99,7 @@ export const ProductService = {
       return new ErrorService.InternalServerError("Error al obtener el producto");
     }
   },
-  getProductsByOwner: async ({ id, take = 20, skip = 0, orderBy }: { id: string } & PaginationProps) => {
+  getProductsByOwner: async ({ userId, take = 20, skip = 0, orderBy }: { userId: string } & PaginationProps) => {
     try {
       const { field = "name", direction = "asc" } = orderBy || {};
       const orderByClause = { [field]: direction };
@@ -136,7 +136,7 @@ export const ProductService = {
         orderBy: orderByClause,
         take,
         skip,
-        where: { userId: id },
+        where: { userId },
       });
 
       if (!products) {
@@ -266,6 +266,35 @@ export const ProductService = {
       const orderByClause = { [field]: direction };
       const products: Product[] = await prisma.product.findMany({
         where: { userId },
+        select: {
+          id: true,
+          sku: true,
+          barcode: true,
+          color: true,
+          brand: true,
+          name: true,
+          description: true,
+          price: true,
+          images: true,
+          hasOffer: true,
+          offerPrice: true,
+          stock: true,
+          isExchangeable: true,
+          ratingCount: true,
+          reviewsNumber: true,
+          badges: true,
+          interests: true,
+          isActive: true,
+          ratings: true,
+          userId: true,
+          createdAt: true,
+          updatedAt: true,
+          productCategoryId: true,
+          user: { select: userSelect },
+          productCategory: { select: productCategorySelect },
+          comments: { select: commentSelect },
+          likes: { select: likeSelect },
+        },
         take,
         skip,
         orderBy: orderByClause,

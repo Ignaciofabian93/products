@@ -34,16 +34,7 @@ app.use(
     context: async ({ req, res }) => {
       const auth = req.headers.authorization;
       const token = auth?.startsWith("Bearer ") ? auth.split(" ")[1] : undefined;
-      let userId: string | undefined;
-      if (token) {
-        try {
-          const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: string };
-          userId = decoded.userId;
-        } catch (error) {
-          console.error("Error al verificar el token:", error);
-        }
-      }
-      return { req, res, userId };
+      return { req, res, token };
     },
   }),
 );
