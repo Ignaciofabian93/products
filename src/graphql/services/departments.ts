@@ -118,8 +118,6 @@ export const DepartmentService = {
   getProductsByDepartment: async ({ departmentId, take = 20 }: { departmentId: number; take: number }) => {
     try {
       const parsedDepartmentId = Number(departmentId);
-      console.log("Fetching products for department ID:", parsedDepartmentId);
-
       const products = await prisma.product.findMany({
         where: {
           productCategory: {
@@ -150,8 +148,6 @@ export const DepartmentService = {
         },
         take,
       });
-
-      console.log("products:", products);
 
       if (!products.length) {
         return new ErrorService.NotFoundError("No se encontraron productos en este departamento");

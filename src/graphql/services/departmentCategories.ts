@@ -170,4 +170,52 @@ export const DepartmentCategoriesService = {
       return new ErrorService.InternalServerError("Error al obtener las categorías de departamento por departamento");
     }
   },
+  getProductsByDepartmentCategory: async ({
+    departmentCategoryId,
+    take = 20,
+  }: {
+    departmentCategoryId: number;
+    take: number;
+  }) => {
+    try {
+      const parsedId = Number(departmentCategoryId);
+      const products = await prisma.product.findMany({
+        where: {
+          productCategory: {
+            departmentCategoryId: parsedId,
+          },
+        },
+        select: {
+          ...productSelect,
+          productCategory: {
+            select: {
+              ...productCategorySelect,
+              departmentCategory: {
+                select: {
+                  id: true,
+                  departmentCategoryName: true,
+                },
+              },
+            },
+          },
+          comments: {
+            select: commentSelect,
+          },
+          likes: {
+            select: likeSelect,
+          },
+        },
+        take,
+      });
+
+      if (!products.length) {
+        return new ErrorService.NotFoundError("No se encontraron productos en esta categoría");
+      }
+
+      return products;
+    } catch (error) {
+      console.error("Error al obtener los productos por categoría de departamento:", error);
+      return new ErrorService.InternalServerError("Error al obtener los productos por categoría de departamento");
+    }
+  },
 };

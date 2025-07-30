@@ -13,6 +13,7 @@ type singleArgs = { id: number; take: number; skip: number; orderBy: OrderBy };
 export const ProductResolver = {
   Query: {
     marketCatalog: (_parent: unknown, _args: unknown) => CatalogService.getMarketCatalog(),
+
     departments: (_parent: unknown, _args: pluralArgs) => DepartmentService.getDepartments(_args),
     department: (_parent: unknown, _args: singleArgs) => DepartmentService.getDepartment(_args),
     productsByDepartment: (_parent: unknown, _args: { departmentId: number; take: number }) =>
@@ -24,12 +25,16 @@ export const ProductResolver = {
       DepartmentCategoriesService.getDepartmentCategories(_args),
     departmentCategory: (_parent: unknown, _args: singleArgs) =>
       DepartmentCategoriesService.getDepartmentCategory(_args),
+    productsByDepartmentCategory: (_parent: unknown, _args: { departmentCategoryId: number; take: number }) =>
+      DepartmentCategoriesService.getProductsByDepartmentCategory(_args),
 
     productCategoriesByDepartmentCategory: (_parent: unknown, _args: singleArgs) =>
       ProductCategoriesService.getProductCategoriesByDepartmentCategory(_args),
     productCategories: (_parent: unknown, _args: pluralArgs) => ProductCategoriesService.getProductCategories(_args),
     productCategory: (_parent: unknown, _args: singleArgs) => ProductCategoriesService.getProductCategory(_args),
 
+    productsByProductCategory: (_parent: unknown, _args: { productCategoryId: number; take: number }) =>
+      ProductCategoriesService.getProductsByProductCategory(_args),
     products: (_parent: unknown, _args: pluralArgs) => ProductService.getProducts(_args),
     product: (_parent: unknown, _args: singleArgs) => ProductService.getProduct(_args),
 
