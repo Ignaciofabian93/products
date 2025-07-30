@@ -152,16 +152,14 @@ export const ProductService = {
   getFeedProducts: async ({
     take = 20,
     scope = "MARKET",
-    exchange,
+    isExchangeable,
     userId,
   }: {
     take?: number;
     scope: "MARKET" | "STORE";
-    exchange: boolean;
+    isExchangeable: boolean;
     userId?: string;
   }) => {
-    console.log("getFeedProducts called with:", { take, scope, exchange, userId });
-
     try {
       const isCompany = scope === "STORE";
       const products = await prisma.product.findMany({
@@ -196,7 +194,7 @@ export const ProductService = {
         },
         where: {
           isActive: true,
-          isExchangeable: exchange,
+          isExchangeable,
           user: { isCompany, id: userId ? { not: userId } : undefined },
         },
         take,

@@ -115,4 +115,52 @@ export const DepartmentService = {
       return new ErrorService.InternalServerError("Error al obtener el departamento");
     }
   },
+  getProductsByDepartment: async ({ departmentId, take = 20 }: { departmentId: number; take: number }) => {
+    try {
+      const parsedDepartmentId = Number(departmentId);
+      console.log("Fetching products for department ID:", parsedDepartmentId);
+
+      const products = await prisma.product.findMany({
+        where: {
+          productCategory: {
+            departmentCategory: {
+              departmentId: parsedDepartmentId,
+            },
+          },
+        },
+        select: {
+          ...productSelect,
+          productCategory: {
+            select: {
+              ...productCategorySelect,
+              departmentCategory: {
+                select: {
+                  id: true,
+                  departmentCategoryName: true,
+                },
+              },
+            },
+          },
+          comments: {
+            select: commentSelect,
+          },
+          likes: {
+            select: likeSelect,
+          },
+        },
+        take,
+      });
+
+      console.log("products:", products);
+
+      if (!products.length) {
+        return new ErrorService.NotFoundError("No se encontraron productos en este departamento");
+      }
+
+      return products;
+    } catch (error) {
+      console.error("Error al obtener los productos del departamento:", error);
+      return new ErrorService.InternalServerError("Error al obtener los productos del departamento");
+    }
+  },
 };

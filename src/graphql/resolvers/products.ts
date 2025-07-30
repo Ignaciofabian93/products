@@ -15,6 +15,8 @@ export const ProductResolver = {
     marketCatalog: (_parent: unknown, _args: unknown) => CatalogService.getMarketCatalog(),
     departments: (_parent: unknown, _args: pluralArgs) => DepartmentService.getDepartments(_args),
     department: (_parent: unknown, _args: singleArgs) => DepartmentService.getDepartment(_args),
+    productsByDepartment: (_parent: unknown, _args: { departmentId: number; take: number }) =>
+      DepartmentService.getProductsByDepartment(_args),
 
     departmentCategoriesByDepartment: (_parent: unknown, _args: singleArgs) =>
       DepartmentCategoriesService.getDepartmentCategoriesByDepartment(_args),
@@ -31,11 +33,9 @@ export const ProductResolver = {
     products: (_parent: unknown, _args: pluralArgs) => ProductService.getProducts(_args),
     product: (_parent: unknown, _args: singleArgs) => ProductService.getProduct(_args),
 
-    productsByOwner: (_parent: unknown, _args: { userId: string; take: number; skip: number; orderBy: OrderBy }) =>
-      ProductService.getProductsByOwner(_args),
     feedProducts: (
       _parent: unknown,
-      _args: { userId: string; take: number; orderBy: OrderBy; scope: "MARKET" | "STORE"; exchange: boolean },
+      _args: { userId: string; isExchangeable: boolean; take: number; orderBy: OrderBy; scope: "MARKET" | "STORE" },
     ) => ProductService.getFeedProducts({ ..._args }),
     myFavorites: (_parent: unknown, _args: { userId: string }) => ProductService.getMyFavorites({ ..._args }),
     myProducts: (_parent: unknown, _args: { userId: string; take: number; skip: number; orderBy: OrderBy }) =>
