@@ -135,6 +135,12 @@ export const DepartmentService = {
                 select: {
                   id: true,
                   departmentCategoryName: true,
+                  department: {
+                    select: {
+                      id: true,
+                      departmentName: true,
+                    },
+                  },
                 },
               },
             },

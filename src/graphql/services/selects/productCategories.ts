@@ -33,6 +33,7 @@ export const userSelect = {
       region: true,
     },
   },
+  userCategory: true,
 };
 
 export const productCategorySelect = {

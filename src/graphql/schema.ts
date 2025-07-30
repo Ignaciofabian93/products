@@ -204,7 +204,7 @@ export const typeDefs = gql`
     productCategories(take: Int, skip: Int, orderBy: OrderByInput): [ProductCategory]
     productCategory(id: ID!, take: Int, skip: Int, orderBy: OrderByInput): ProductCategory
 
-    productsByProductCategory(id: ID!, take: Int, skip: Int, orderBy: OrderByInput): [Product]
+    productsByProductCategory(productCategoryId: ID!, take: Int, skip: Int, orderBy: OrderByInput): [Product]
     products(take: Int, skip: Int, orderBy: OrderByInput): [Product]
     product(id: ID!): Product
 
