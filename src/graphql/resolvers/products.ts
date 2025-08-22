@@ -67,4 +67,10 @@ export const ProductResolver = {
   Department: {
     __resolveReference: (reference: singleArgs) => DepartmentService.getDepartment(reference),
   },
+  ProductLike: {
+    user: (parent: { userId: string }) => ({ __typename: "User", id: parent.userId }),
+  },
+  ProductComment: {
+    user: (parent: { userId: string }) => ({ __typename: "User", id: parent.userId }),
+  },
 };

@@ -3,6 +3,29 @@ import gql from "graphql-tag";
 export const typeDefs = gql`
   extend schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "@shareable", "@external"])
 
+  # Federated enums from users subgraph
+  enum AccountType {
+    FREE
+    PLUS
+    PREMIUM
+  }
+
+  enum SellerType {
+    PERSON
+    STORE
+  }
+
+  enum ContactMethod {
+    EMAIL
+    WHATSAPP
+    ALL
+  }
+
+  # Federated user type
+  extend type User @key(fields: "id") {
+    id: ID! @external
+  }
+
   enum Scope {
     MARKET
     STORE
@@ -59,9 +82,7 @@ export const typeDefs = gql`
     G
   }
 
-  extend type User @key(fields: "id") {
-    id: ID! @external
-  }
+  # Remove local User extension, now federated above
 
   type MaterialImpactEstimate @key(fields: "id") {
     id: ID!
@@ -117,17 +138,19 @@ export const typeDefs = gql`
   }
 
   scalar DateTime
+  scalar JSON
 
   type ProductLike {
     id: ID!
     userId: String!
+    user: User # Add federated user reference for likes
   }
 
   type ProductComment {
     id: ID!
     comment: String!
     userId: String!
-    user: User
+    user: User # Federated user reference
   }
 
   type Product @key(fields: "id") {
@@ -155,7 +178,7 @@ export const typeDefs = gql`
     productCategoryId: Int!
     productCategory: ProductCategory
     userId: String!
-    user: User
+    user: User # Federated user reference
     comments: [ProductComment]
     likes: [ProductLike]
   }
@@ -190,30 +213,6 @@ export const typeDefs = gql`
 
   extend type Query {
     marketCatalog: [Department]
-
-    departments(take: Int, skip: Int, orderBy: OrderByInput): [Department]
-    department(id: ID!, take: Int, skip: Int, orderBy: OrderByInput): Department
-    productsByDepartment(departmentId: ID!, take: Int): [Product]
-
-    departmentCategoriesByDepartment(id: ID!, take: Int, skip: Int, orderBy: OrderByInput): [DepartmentCategory]
-    departmentCategories(take: Int, skip: Int, orderBy: OrderByInput): [DepartmentCategory]
-    departmentCategory(id: ID!, take: Int, skip: Int, orderBy: OrderByInput): DepartmentCategory
-    productsByDepartmentCategory(departmentCategoryId: ID!, take: Int): [Product]
-
-    productCategoriesByDepartmentCategory(id: ID!, take: Int, skip: Int, orderBy: OrderByInput): [ProductCategory]
-    productCategories(take: Int, skip: Int, orderBy: OrderByInput): [ProductCategory]
-    productCategory(id: ID!, take: Int, skip: Int, orderBy: OrderByInput): ProductCategory
-
-    productsByProductCategory(productCategoryId: ID!, take: Int, skip: Int, orderBy: OrderByInput): [Product]
-    products(take: Int, skip: Int, orderBy: OrderByInput): [Product]
-    product(id: ID!): Product
-
-    feedProducts(userId: ID!, isExchangeable: Boolean, take: Int!, scope: Scope!): [Product]
-    myFavorites(userId: ID!): [Product]
-    myProducts(userId: ID!, isExchangeable: Boolean, take: Int, skip: Int, orderBy: OrderByInput): [Product]
-
-    co2ImpactMessages(value: Float): Co2ImpactMessage
-    waterImpactMessages(value: Float): WaterImpactMessage
   }
 
   extend type Mutation {
