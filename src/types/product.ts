@@ -62,4 +62,5 @@ export type DepartmentCategory = {
 export type Department = {
   id: number;
   departmentName: string;
+  departmentImage?: string | null;
 };

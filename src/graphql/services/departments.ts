@@ -15,6 +15,7 @@ export const DepartmentService = {
         select: {
           id: true,
           departmentName: true,
+          departmentImage: true,
           departmentCategories: {
             select: {
               id: true,

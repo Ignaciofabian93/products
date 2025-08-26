@@ -134,6 +134,7 @@ export const typeDefs = gql`
   type Department @key(fields: "id") {
     id: ID!
     departmentName: String!
+    departmentImage: String
     departmentCategories: [DepartmentCategory]
   }
 
