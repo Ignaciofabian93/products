@@ -1,5 +1,4 @@
 import express from "express";
-import jwt from "jsonwebtoken";
 import { ApolloServer } from "@apollo/server";
 import { buildSubgraphSchema } from "@apollo/subgraph";
 import { expressMiddleware } from "@apollo/server/express4";
@@ -43,7 +42,7 @@ app.get("/", (req, res) => {
   res.send("Product's subgraph is running");
 });
 
-const PORT = process.env.PORT || 4002;
+const PORT = process.env.PORT || 9002;
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
