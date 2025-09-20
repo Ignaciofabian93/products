@@ -662,9 +662,11 @@ enum Badge {
 enum ContactMethod {
   EMAIL
   WHATSAPP
-  ALL
   PHONE
   INSTAGRAM
+  FACEBOOK
+  WEBSITE
+  TIKTOK
 }
 
 enum WeightUnit {

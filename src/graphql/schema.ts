@@ -13,12 +13,17 @@ export const typeDefs = gql`
   enum SellerType {
     PERSON
     STORE
+    SERVICE
   }
 
   enum ContactMethod {
     EMAIL
     WHATSAPP
-    ALL
+    PHONE
+    INSTAGRAM
+    FACEBOOK
+    WEBSITE
+    TIKTOK
   }
 
   # Federated user type
