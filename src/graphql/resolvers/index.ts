@@ -1,22 +1,22 @@
-import { ProductResolver } from "./products";
+import { MainResolver } from "./main";
 
 export const resolvers = {
   Query: {
-    ...ProductResolver.Query,
+    ...MainResolver.Query,
   },
   Mutation: {
-    ...ProductResolver.Mutation,
+    ...MainResolver.Mutation,
   },
   Product: {
-    __resolveReference: ProductResolver.Product.__resolveReference,
+    __resolveReference: MainResolver.Product.__resolveReference,
   },
   ProductCategory: {
-    __resolveReference: ProductResolver.ProductCategory.__resolveReference,
+    __resolveReference: MainResolver.ProductCategory.__resolveReference,
   },
   DepartmentCategory: {
-    __resolveReference: ProductResolver.DepartmentCategory.__resolveReference,
+    __resolveReference: MainResolver.DepartmentCategory.__resolveReference,
   },
   Department: {
-    __resolveReference: ProductResolver.Department.__resolveReference,
+    __resolveReference: MainResolver.Department.__resolveReference,
   },
 };

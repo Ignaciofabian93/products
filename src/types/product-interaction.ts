@@ -1,12 +1,14 @@
 export type ProductLike = {
   id: number;
   productId: number;
-  userId: string;
+  sellerId: string;
 };
 
 export type ProductComment = {
   id: number;
   comment: string;
   productId: number;
-  userId: string;
+  sellerId: string;
+  createdAt: Date;
+  rating?: number | null;
 };

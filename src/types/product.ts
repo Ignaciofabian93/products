@@ -1,4 +1,4 @@
-import { type Badge, type ProductSize, type WeightUnit } from "./enums";
+import { type Badge, type ProductSize, type WeightUnit, type ProductCondition } from "./enums";
 
 export type Product = {
   id: number;
@@ -19,11 +19,16 @@ export type Product = {
   ratings: number;
   ratingCount: number;
   reviewsNumber: number;
-  userId: string;
+  sellerId: string;
   badges: Badge[];
   createdAt: Date;
   updatedAt: Date;
   productCategoryId: number;
+  condition: ProductCondition;
+  conditionDescription?: string | null;
+  sustainabilityScore?: number | null;
+  materialComposition?: string | null;
+  recycledContent?: number | null;
 };
 
 export type ProductCategory = {
@@ -63,4 +68,34 @@ export type Department = {
   id: number;
   departmentName: string;
   departmentImage?: string | null;
+};
+
+export type ProductVariant = {
+  id: number;
+  productId: number;
+  name: string;
+  price: number;
+  stock: number;
+  color?: string | null;
+  size?: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type Co2ImpactMessage = {
+  id: number;
+  min: number;
+  max: number;
+  message1: string;
+  message2: string;
+  message3: string;
+};
+
+export type WaterImpactMessage = {
+  id: number;
+  min: number;
+  max: number;
+  message1: string;
+  message2: string;
+  message3: string;
 };

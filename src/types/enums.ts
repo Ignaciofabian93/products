@@ -5,7 +5,6 @@ export type Badge =
   | "POPULAR"
   | "DISCOUNTED"
   | "WOMAN_OWNED"
-  | "ECO_FRIENDLY"
   | "BEST_SELLER"
   | "TOP_RATED"
   | "COMMUNITY_FAVORITE"
@@ -20,10 +19,6 @@ export type Badge =
   | "LIMITED_STOCK"
   | "SEASONAL"
   | "FREE_SHIPPING"
-  | "NEW"
-  | "USED"
-  | "SLIGHT_DAMAGE"
-  | "WORN"
   | "FOR_REPAIR"
   | "REFURBISHED"
   | "EXCHANGEABLE"
@@ -38,3 +33,4 @@ export type Badge =
 export type ContactMethod = "EMAIL" | "WHATSAPP" | "ALL";
 export type WeightUnit = "KG" | "LB" | "OZ" | "G";
 export type ProductSize = "XS" | "S" | "M" | "L" | "XL";
+export type ProductCondition = "NEW" | "OPEN_BOX" | "LIKE_NEW" | "FAIR" | "POOR" | "FOR_PARTS" | "REFURBISHED";

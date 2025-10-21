@@ -4,6 +4,7 @@ import { buildSubgraphSchema } from "@apollo/subgraph";
 import { expressMiddleware } from "@apollo/server/express4";
 import { typeDefs } from "./graphql/schema";
 import { resolvers } from "./graphql/resolvers";
+import { createContext } from "./middleware/auth";
 
 const server = new ApolloServer({
   schema: buildSubgraphSchema([
@@ -30,11 +31,7 @@ app.use(express.urlencoded({ extended: true, limit: "20mb" }));
 app.use(
   "/graphql",
   expressMiddleware(server, {
-    context: async ({ req, res }) => {
-      const auth = req.headers.authorization;
-      const token = auth?.startsWith("Bearer ") ? auth.split(" ")[1] : undefined;
-      return { req, res, token };
-    },
+    context: async ({ req }) => createContext({ req }),
   }),
 );
 
