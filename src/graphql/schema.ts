@@ -41,8 +41,8 @@ export const typeDefs = gql`
 
   enum ProductCondition {
     NEW
+    OPEN_BOX
     LIKE_NEW
-    GOOD
     FAIR
     POOR
     FOR_PARTS
@@ -67,7 +67,7 @@ export const typeDefs = gql`
   scalar DateTime
   scalar JSON
 
-  type PageInfo {
+  type PageInfo @shareable {
     hasNextPage: Boolean!
     hasPreviousPage: Boolean!
     startCursor: String
@@ -108,7 +108,8 @@ export const typeDefs = gql`
     id: ID!
     departmentName: String!
     departmentImage: String
-    departmentCategories: [DepartmentCategory]
+    departmentCategory: [DepartmentCategory!]!
+    products: ProductConnection!
   }
 
   type DepartmentCategory @key(fields: "id") {
@@ -116,7 +117,8 @@ export const typeDefs = gql`
     departmentId: Int!
     departmentCategoryName: String!
     department: Department
-    productCategories: [ProductCategory]
+    productCategory: [ProductCategory!]!
+    products: ProductConnection!
   }
 
   type ProductCategory @key(fields: "id") {
@@ -127,7 +129,7 @@ export const typeDefs = gql`
     size: ProductSize
     averageWeight: Float
     weightUnit: WeightUnit
-    products: [Product]
+    products: ProductConnection!
     departmentCategory: DepartmentCategory
     materials: [ProductCategoryMaterial]
   }
@@ -171,6 +173,7 @@ export const typeDefs = gql`
     id: ID!
     category: String!
     subcategories: [StoreSubCategory!]!
+    products: StoreProductConnection!
   }
 
   type StoreSubCategory @key(fields: "id") {
@@ -178,7 +181,8 @@ export const typeDefs = gql`
     storeCategoryId: Int!
     subcategory: String!
     storeCategory: StoreCategory
-    storeProducts:
+    products: StoreProductConnection
+    productCount: Int
   }
 
   type StoreProductMaterial @key(fields: "id") {
@@ -309,6 +313,50 @@ export const typeDefs = gql`
     recycledContent: Float
   }
 
+  input AddStoreProductInput {
+    sku: String
+    barcode: String
+    color: String
+    brand: String
+    name: String!
+    description: String!
+    price: Int!
+    images: [String!]!
+    hasOffer: Boolean
+    offerPrice: Int
+    stock: Int!
+    isActive: Boolean
+    badges: [Badge!]
+    subcategoryId: Int!
+    sellerId: String!
+    sustainabilityScore: Int
+    materialComposition: String
+    recycledContent: Float
+    carbonFootprint: Float
+  }
+
+  input UpdateStoreProductInput {
+    id: ID!
+    sku: String
+    barcode: String
+    color: String
+    brand: String
+    name: String
+    description: String
+    price: Int
+    images: [String!]
+    hasOffer: Boolean
+    offerPrice: Int
+    stock: Int
+    isActive: Boolean
+    badges: [Badge!]
+    subcategoryId: Int
+    sustainabilityScore: Int
+    materialComposition: String
+    recycledContent: Float
+    carbonFootprint: Float
+  }
+
   type DepartmentConnection {
     nodes: [Department!]!
     pageInfo: PageInfo!
@@ -345,21 +393,57 @@ export const typeDefs = gql`
   }
 
   extend type Query {
+    # Catalog Queries
     marketCatalog: [Department]
     storeCatalog: [StoreCategory]
 
     # Marketplace Queries
-    getDepartment(id: ID!, page: Int! = 1, pageSize: Int! = 10): DepartmentConnection
-    getDepartmentCategory(id: ID!, page: Int! = 1, pageSize: Int! = 10): DepartmentCategoryConnection
-    getProductCategory(id: ID!, page: Int! = 1, pageSize: Int! = 10): ProductCategoryConnection
-    getProductsBySeller(sellerId: ID!, page: Int! = 1, pageSize: Int! = 10): ProductConnection
-    getProducts(page: Int! = 1, pageSize: Int! = 10): ProductConnection
+    getDepartment(id: ID!): Department
+    getDepartmentCategories(departmentId: ID!, page: Int = 1, pageSize: Int = 10): DepartmentCategoryConnection
+    getProductCategory(id: ID!): ProductCategory
+    getProductCategories(departmentCategoryId: ID!, page: Int = 1, pageSize: Int = 10): ProductCategoryConnection
+
+    # Product Queries
+    getProduct(id: ID!): Product
+    getProducts(page: Int = 1, pageSize: Int = 10, isActive: Boolean): ProductConnection
+    getProductsBySeller(sellerId: ID!, page: Int = 1, pageSize: Int = 10, isActive: Boolean): ProductConnection
+    getProductsByCategory(
+      productCategoryId: ID!
+      page: Int = 1
+      pageSize: Int = 10
+      isActive: Boolean
+    ): ProductConnection
+    getExchangeableProducts(page: Int = 1, pageSize: Int = 10): ProductConnection
 
     # Store Queries
-    getStoreCategory(id: ID!, page: Int! = 1, pageSize: Int! = 10): StoreCategoryConnection
-    getStoreSubCategory(id: ID!, page: Int! = 1, pageSize: Int! = 10): StoreSubCategoryConnection
-    getStoreProductsBySeller(sellerId: ID!, page: Int! = 1, pageSize: Int! = 10): StoreProductConnection
-    getStoreProduct(id: ID!, page: Int! = 1, pageSize: Int! = 10): StoreProductConnection
+    getStoreCategory(id: ID!): StoreCategory
+    getStoreSubCategories(storeCategoryId: ID!, page: Int = 1, pageSize: Int = 10): StoreSubCategoryConnection
+    getStoreSubCategory(id: ID!): StoreSubCategory
+
+    # Store Product Queries
+    getStoreProduct(id: ID!): StoreProduct
+    getStoreProducts(page: Int = 1, pageSize: Int = 10, isActive: Boolean): StoreProductConnection
+    getStoreProductsBySeller(
+      sellerId: ID!
+      page: Int = 1
+      pageSize: Int = 10
+      isActive: Boolean
+    ): StoreProductConnection
+    getStoreProductsBySubCategory(
+      subcategoryId: ID!
+      page: Int = 1
+      pageSize: Int = 10
+      isActive: Boolean
+    ): StoreProductConnection
+
+    # Comments and Likes
+    getProductComments(storeProductId: ID!, page: Int = 1, pageSize: Int = 10): [ProductComment!]!
+    getProductLikes(storeProductId: ID!): [ProductLike!]!
+
+    # Impact Queries
+    getMaterialImpacts: [MaterialImpactEstimate!]!
+    getCo2ImpactMessages: [Co2ImpactMessage!]!
+    getWaterImpactMessages: [WaterImpactMessage!]!
   }
 
   extend type Mutation {
@@ -367,10 +451,18 @@ export const typeDefs = gql`
     addProduct(input: AddProductInput!): Product
     updateProduct(input: UpdateProductInput!): Product
     deleteProduct(id: ID!): Product
+    toggleProductActive(id: ID!): Product
 
     # Store Mutations
     addStoreProduct(input: AddStoreProductInput!): StoreProduct
     updateStoreProduct(input: UpdateStoreProductInput!): StoreProduct
     deleteStoreProduct(id: ID!): StoreProduct
+    toggleStoreProductActive(id: ID!): StoreProduct
+
+    # Product Interactions
+    likeProduct(storeProductId: ID!, sellerId: ID!): ProductLike
+    unlikeProduct(storeProductId: ID!, sellerId: ID!): Boolean
+    addProductComment(storeProductId: ID!, sellerId: ID!, comment: String!, rating: Int): ProductComment
+    deleteProductComment(id: ID!): Boolean
   }
 `;

@@ -9,11 +9,11 @@ export const CatalogService = {
         select: {
           id: true,
           departmentName: true,
-          departmentCategories: {
+          departmentCategory: {
             select: {
               id: true,
               departmentCategoryName: true,
-              productCategories: {
+              productCategory: {
                 select: {
                   id: true,
                   productCategoryName: true,
@@ -35,6 +35,35 @@ export const CatalogService = {
     } catch (error) {
       console.error("Error al obtener el catálogo del mercado:", error);
       return new ErrorService.InternalServerError("Error al obtener el catálogo del mercado");
+    }
+  },
+
+  getStoreCatalog: async () => {
+    try {
+      const storeCatalog = await prisma.storeCategory.findMany({
+        select: {
+          id: true,
+          category: true,
+          subcategories: {
+            select: {
+              id: true,
+              subCategory: true,
+            },
+          },
+        },
+        orderBy: {
+          category: "asc",
+        },
+      });
+
+      if (!storeCatalog.length) {
+        return new ErrorService.NotFoundError("No se encontraron categorías de tienda");
+      }
+
+      return storeCatalog;
+    } catch (error) {
+      console.error("Error al obtener el catálogo de tiendas:", error);
+      return new ErrorService.InternalServerError("Error al obtener el catálogo de tiendas");
     }
   },
 };

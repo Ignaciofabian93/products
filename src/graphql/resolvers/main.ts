@@ -4,36 +4,41 @@ import { DepartmentService } from "../services/departments";
 import { ProductService } from "../services/product";
 import { ProductCategoriesService } from "../services/productCategories";
 import { CatalogResolver } from "./catalog";
+import { DepartmentResolver } from "./department";
 import { ImpactResolver } from "./impact";
 import { ProductResolver } from "./product";
+import { StoreProductResolver } from "./storeProduct";
 
-type singleArgs = { id: number; take: number; skip: number; orderBy: OrderBy };
+// type singleArgs = { id: number; take: number; skip: number; orderBy: OrderBy };
 
 export const MainResolver = {
   Query: {
     ...CatalogResolver.Query,
     ...ProductResolver.Query,
     ...ImpactResolver.Query,
+    ...StoreProductResolver.Query,
+    ...DepartmentResolver.Query,
   },
   Mutation: {
     ...ProductResolver.Mutation,
+    ...StoreProductResolver.Mutation,
   },
-  Product: {
-    __resolveReference: (reference: singleArgs) => ProductService.getProduct(reference),
-  },
-  ProductCategory: {
-    __resolveReference: (reference: singleArgs) => ProductCategoriesService.getProductCategory(reference),
-  },
-  DepartmentCategory: {
-    __resolveReference: (reference: singleArgs) => DepartmentCategoriesService.getDepartmentCategory(reference),
-  },
-  Department: {
-    __resolveReference: (reference: singleArgs) => DepartmentService.getDepartment(reference),
-  },
-  ProductLike: {
-    user: (parent: { userId: string }) => ({ __typename: "User", id: parent.userId }),
-  },
-  ProductComment: {
-    user: (parent: { userId: string }) => ({ __typename: "User", id: parent.userId }),
-  },
+  // Product: {
+  //   __resolveReference: (reference: singleArgs) => ProductService.getProduct(reference),
+  // },
+  // ProductCategory: {
+  //   __resolveReference: (reference: singleArgs) => ProductCategoriesService.getProductCategory(reference),
+  // },
+  // DepartmentCategory: {
+  //   __resolveReference: (reference: singleArgs) => DepartmentCategoriesService.getDepartmentCategory(reference),
+  // },
+  // Department: {
+  //   __resolveReference: (reference: singleArgs) => DepartmentService.getDepartment(reference),
+  // },
+  // ProductLike: {
+  //   user: (parent: { userId: string }) => ({ __typename: "User", id: parent.userId }),
+  // },
+  // ProductComment: {
+  //   user: (parent: { userId: string }) => ({ __typename: "User", id: parent.userId }),
+  // },
 };

@@ -1,221 +1,145 @@
 import prisma from "../../client/prisma";
 import { ErrorService } from "../../errors/errors";
-import { type PaginationProps } from "../../types/general";
-import { type DepartmentCategory } from "../../types/product";
-import {
-  commentSelect,
-  departmentSelect,
-  likeSelect,
-  productCategorySelect,
-  productSelect,
-} from "./selects/departmentCategories";
+import { calculatePrismaParams, createPaginatedResponse } from "../../utils/pagination";
 
 export const DepartmentCategoriesService = {
-  getDepartmentCategories: async ({ take = 20, skip = 0, orderBy }: PaginationProps) => {
+  getDepartmentCategories: async ({
+    departmentId,
+    page = 1,
+    pageSize = 10,
+  }: {
+    departmentId: number;
+    page?: number;
+    pageSize?: number;
+  }) => {
     try {
-      const { field = "name", direction = "asc" } = orderBy || {};
-      const orderByClause = {
-        [field]: direction,
-      };
-      const departmentCategories: DepartmentCategory[] = await prisma.departmentCategory.findMany({
-        select: {
-          id: true,
-          departmentId: true,
-          department: {
-            select: departmentSelect,
-          },
-          departmentCategoryName: true,
-          productCategories: {
-            select: {
-              ...productCategorySelect,
-              products: {
-                select: {
-                  ...productSelect,
-                  comments: {
-                    select: commentSelect,
-                  },
-                  likes: {
-                    select: likeSelect,
-                  },
-                },
-                orderBy: orderByClause,
-                take,
-                skip,
-              },
-            },
-            orderBy: {
-              productCategoryName: "asc",
-            },
-          },
-        },
-        orderBy: {
-          departmentCategoryName: "asc",
-        },
+      const parsedId = Number(departmentId);
+      const { skip, take } = calculatePrismaParams(page, pageSize);
+
+      const totalCount = await prisma.departmentCategory.count({
+        where: { departmentId: parsedId },
       });
 
-      if (!departmentCategories.length) {
-        return new ErrorService.NotFoundError("No se encontraron categorías");
-      }
-
-      return departmentCategories;
-    } catch (error) {
-      console.error("Error al obtener las categorías de departamento:", error);
-      return new ErrorService.InternalServerError("Error al obtener las categorías de departamento");
-    }
-  },
-  getDepartmentCategory: async ({ id, take = 20, skip = 0, orderBy }: { id: number } & PaginationProps) => {
-    try {
-      const { field = "name", direction = "asc" } = orderBy || {};
-      const orderByClause = {
-        [field]: direction,
-      };
-      const parsedId = Number(id);
-      const departmentCategory: DepartmentCategory | null = await prisma.departmentCategory.findUnique({
-        where: { id: parsedId },
-        select: {
-          id: true,
-          departmentId: true,
-          department: {
-            select: departmentSelect,
-          },
-          departmentCategoryName: true,
-          productCategories: {
-            select: {
-              ...productCategorySelect,
-              products: {
-                select: {
-                  ...productSelect,
-                  comments: {
-                    select: commentSelect,
-                  },
-                  likes: {
-                    select: likeSelect,
-                  },
-                },
-                orderBy: orderByClause,
-                take,
-                skip,
-              },
-            },
-            orderBy: {
-              productCategoryName: "asc",
-            },
-          },
-        },
-      });
-
-      return departmentCategory;
-    } catch (error) {
-      console.error("Error al obtener la categoría de departamento:", error);
-      return new ErrorService.InternalServerError("Error al obtener la categoría de departamento");
-    }
-  },
-  getDepartmentCategoriesByDepartment: async ({
-    id,
-    take = 20,
-    skip = 0,
-    orderBy,
-  }: { id: number } & PaginationProps) => {
-    try {
-      const { field = "name", direction = "asc" } = orderBy || {};
-      const orderByClause = {
-        [field]: direction,
-      };
-      const parsedId = Number(id);
-
-      const departmentCategories: DepartmentCategory[] = await prisma.departmentCategory.findMany({
+      const departmentCategories = await prisma.departmentCategory.findMany({
         where: { departmentId: parsedId },
         select: {
           id: true,
+          departmentCategoryName: true,
           departmentId: true,
           department: {
-            select: departmentSelect,
-          },
-          departmentCategoryName: true,
-          productCategories: {
             select: {
-              ...productCategorySelect,
-              products: {
-                select: {
-                  ...productSelect,
-                  comments: {
-                    select: commentSelect,
-                  },
-                  likes: {
-                    select: likeSelect,
-                  },
-                },
-                orderBy: orderByClause,
-                take,
-                skip,
-              },
+              id: true,
+              departmentName: true,
+              departmentImage: true,
             },
-            orderBy: {
-              productCategoryName: "asc",
+          },
+          _count: {
+            select: {
+              productCategory: true,
             },
           },
         },
+        skip,
+        take,
         orderBy: {
           departmentCategoryName: "asc",
         },
       });
 
-      if (!departmentCategories.length) {
-        return new ErrorService.NotFoundError("No se encontraron categorías");
-      }
-
-      return departmentCategories;
+      return createPaginatedResponse(departmentCategories, page, pageSize, totalCount);
     } catch (error) {
-      console.error("Error al obtener las categorías de departamento por departamento:", error);
-      return new ErrorService.InternalServerError("Error al obtener las categorías de departamento por departamento");
+      console.error("Error al obtener las categorías de departamento:", error);
+      throw new ErrorService.InternalServerError("Error al obtener las categorías de departamento.");
     }
   },
-  getProductsByDepartmentCategory: async ({
-    departmentCategoryId,
-    take = 20,
-  }: {
-    departmentCategoryId: number;
-    take: number;
-  }) => {
+
+  getDepartmentCategory: async ({ id, page = 1, pageSize = 10 }: { id: number; page?: number; pageSize?: number }) => {
     try {
-      const parsedId = Number(departmentCategoryId);
+      const parsedId = Number(id);
+      const { skip, take } = calculatePrismaParams(page, pageSize);
+
+      const departmentCategory = await prisma.departmentCategory.findUnique({
+        where: { id: parsedId },
+        select: {
+          id: true,
+          departmentCategoryName: true,
+          departmentId: true,
+          department: {
+            select: {
+              id: true,
+              departmentName: true,
+              departmentImage: true,
+            },
+          },
+        },
+      });
+
+      if (!departmentCategory) {
+        throw new ErrorService.NotFoundError("Categoría de departamento no encontrada.");
+      }
+
+      const totalCount = await prisma.productCategory.count({
+        where: { departmentCategoryId: parsedId },
+      });
+
+      const productCategories = await prisma.productCategory.findMany({
+        where: { departmentCategoryId: parsedId },
+        select: {
+          id: true,
+          productCategoryName: true,
+          departmentCategoryId: true,
+          keywords: true,
+          size: true,
+          averageWeight: true,
+          weightUnit: true,
+          _count: {
+            select: {
+              product: true,
+            },
+          },
+        },
+        skip,
+        take,
+        orderBy: {
+          productCategoryName: "asc",
+        },
+      });
+
       const products = await prisma.product.findMany({
         where: {
           productCategory: {
             departmentCategoryId: parsedId,
           },
+          isActive: true,
         },
         select: {
-          ...productSelect,
-          productCategory: {
-            select: {
-              ...productCategorySelect,
-              departmentCategory: {
-                select: {
-                  id: true,
-                  departmentCategoryName: true,
-                },
-              },
-            },
-          },
-          comments: {
-            select: commentSelect,
-          },
-          likes: {
-            select: likeSelect,
-          },
+          id: true,
+          name: true,
+          description: true,
+          price: true,
+          hasOffer: true,
+          offerPrice: true,
+          images: true,
+          badges: true,
+          brand: true,
+          color: true,
+          condition: true,
+          isActive: true,
+          createdAt: true,
         },
-        take,
+        orderBy: {
+          createdAt: "desc",
+        },
       });
 
-      if (!products.length) {
-        return new ErrorService.NotFoundError("No se encontraron productos en esta categoría");
-      }
-
-      return products;
+      return {
+        ...departmentCategory,
+        productCategories: createPaginatedResponse(productCategories, page, pageSize, totalCount),
+        products,
+      };
     } catch (error) {
-      console.error("Error al obtener los productos por categoría de departamento:", error);
-      return new ErrorService.InternalServerError("Error al obtener los productos por categoría de departamento");
+      console.error("Error al obtener la categoría de departamento:", error);
+      throw new ErrorService.InternalServerError("Error al obtener la categoría de departamento.");
     }
   },
 };

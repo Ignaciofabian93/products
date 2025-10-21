@@ -1,150 +1,144 @@
 import prisma from "../../client/prisma";
 import { ErrorService } from "../../errors/errors";
-import { type PaginationProps } from "../../types/general";
-import { type ProductCategory } from "../../types/product";
-import { commentSelect, likeSelect } from "./selects/departmentCategories";
-import { departmentCategorySelect, productCategorySelect, productSelect } from "./selects/productCategories";
+import { calculatePrismaParams, createPaginatedResponse } from "../../utils/pagination";
 
 export const ProductCategoriesService = {
-  getProductCategories: async ({ take = 20, skip = 0, orderBy }: PaginationProps) => {
+  getProductCategories: async ({
+    departmentCategoryId,
+    page = 1,
+    pageSize = 10,
+  }: {
+    departmentCategoryId: number;
+    page?: number;
+    pageSize?: number;
+  }) => {
     try {
-      const { field = "name", direction = "asc" } = orderBy || {};
-      const orderByClause = { [field]: direction };
-      const productCategories: ProductCategory[] = await prisma.productCategory.findMany({
-        select: {
-          ...productCategorySelect,
-          products: {
-            select: productSelect,
-            orderBy: orderByClause,
-            take,
-            skip,
-          },
-        },
-        orderBy: {
-          productCategoryName: "asc",
-        },
-      });
+      const parsedId = Number(departmentCategoryId);
+      const { skip, take } = calculatePrismaParams(page, pageSize);
 
-      if (!productCategories.length) {
-        return new ErrorService.NotFoundError("No se encontraron categorías");
-      }
-
-      return productCategories;
-    } catch (error) {
-      console.error("Error al obtener las categorías de producto:", error);
-      return new ErrorService.InternalServerError("Error al obtener las categorías de producto");
-    }
-  },
-  getProductCategory: async ({ id, take = 20, skip = 0, orderBy }: { id: number } & PaginationProps) => {
-    try {
-      const { field = "name", direction = "asc" } = orderBy || {};
-      const orderByClause = { [field]: direction };
-      const parsedId = Number(id);
-      const productCategory: ProductCategory | null = await prisma.productCategory.findFirst({
-        select: {
-          ...productCategorySelect,
-          products: {
-            select: productSelect,
-            orderBy: orderByClause,
-            take,
-            skip,
-          },
-          departmentCategory: {
-            select: departmentCategorySelect,
-          },
-        },
-        where: { id: parsedId },
-      });
-
-      if (!productCategory) {
-        return new ErrorService.NotFoundError("No se encontró la categoría de producto");
-      }
-
-      return productCategory;
-    } catch (error) {
-      console.error("Error al obtener la categoría de producto:", error);
-      return new ErrorService.InternalServerError("Error al obtener la categoría de producto");
-    }
-  },
-  getProductCategoriesByDepartmentCategory: async ({
-    id,
-    take = 20,
-    skip = 0,
-    orderBy,
-  }: { id: number } & PaginationProps) => {
-    try {
-      const { field = "name", direction = "asc" } = orderBy || {};
-      const orderByClause = { [field]: direction };
-      const parsedId = Number(id);
-      const productCategories: ProductCategory[] = await prisma.productCategory.findMany({
-        select: {
-          ...productCategorySelect,
-          products: {
-            select: productSelect,
-            orderBy: orderByClause,
-            take,
-            skip,
-          },
-        },
-        orderBy: {
-          productCategoryName: "asc",
-        },
+      const totalCount = await prisma.productCategory.count({
         where: { departmentCategoryId: parsedId },
       });
 
-      if (!productCategories.length) {
-        return new ErrorService.NotFoundError("No se encontraron categorías");
-      }
-
-      return productCategories;
-    } catch (error) {
-      console.error("Error al obtener las categorías de producto por categoría de departamento:", error);
-      return new ErrorService.InternalServerError(
-        "Error al obtener las categorías de producto por categoría de departamento",
-      );
-    }
-  },
-  getProductsByProductCategory: async ({
-    productCategoryId,
-    take = 20,
-  }: {
-    productCategoryId: number;
-    take: number;
-  }) => {
-    try {
-      const parsedId = Number(productCategoryId);
-      const products = await prisma.product.findMany({
-        where: {
-          productCategoryId: parsedId,
-        },
+      const productCategories = await prisma.productCategory.findMany({
+        where: { departmentCategoryId: parsedId },
         select: {
-          ...productSelect,
-          productCategory: {
+          id: true,
+          productCategoryName: true,
+          departmentCategoryId: true,
+          keywords: true,
+          size: true,
+          averageWeight: true,
+          weightUnit: true,
+          departmentCategory: {
             select: {
-              ...productCategorySelect,
-              departmentCategory: {
-                select: departmentCategorySelect,
+              id: true,
+              departmentCategoryName: true,
+              department: {
+                select: {
+                  id: true,
+                  departmentName: true,
+                  departmentImage: true,
+                },
               },
             },
           },
-          comments: {
-            select: commentSelect,
-          },
-          likes: {
-            select: likeSelect,
+          _count: {
+            select: {
+              product: true,
+            },
           },
         },
+        skip,
         take,
+        orderBy: {
+          productCategoryName: "asc",
+        },
       });
 
-      if (!products.length) {
-        return new ErrorService.NotFoundError("No se encontraron productos en esta categoría");
+      return createPaginatedResponse(productCategories, page, pageSize, totalCount);
+    } catch (error) {
+      console.error("Error al obtener las categorías de producto:", error);
+      throw new ErrorService.InternalServerError("Error al obtener las categorías de producto.");
+    }
+  },
+
+  getProductCategory: async ({ id, page = 1, pageSize = 10 }: { id: number; page?: number; pageSize?: number }) => {
+    try {
+      const parsedId = Number(id);
+      const { skip, take } = calculatePrismaParams(page, pageSize);
+
+      const productCategory = await prisma.productCategory.findUnique({
+        where: { id: parsedId },
+        select: {
+          id: true,
+          productCategoryName: true,
+          departmentCategoryId: true,
+          keywords: true,
+          size: true,
+          averageWeight: true,
+          weightUnit: true,
+          departmentCategory: {
+            select: {
+              id: true,
+              departmentCategoryName: true,
+              department: {
+                select: {
+                  id: true,
+                  departmentName: true,
+                  departmentImage: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!productCategory) {
+        throw new ErrorService.NotFoundError("Categoría de producto no encontrada.");
       }
 
-      return products;
+      const totalCount = await prisma.product.count({
+        where: {
+          productCategoryId: parsedId,
+          isActive: true,
+        },
+      });
+
+      const products = await prisma.product.findMany({
+        where: {
+          productCategoryId: parsedId,
+          isActive: true,
+        },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          price: true,
+          hasOffer: true,
+          offerPrice: true,
+          images: true,
+          badges: true,
+          brand: true,
+          color: true,
+          condition: true,
+          isActive: true,
+          createdAt: true,
+        },
+        skip,
+        take,
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+
+      return {
+        ...productCategory,
+        products: createPaginatedResponse(products, page, pageSize, totalCount),
+      };
     } catch (error) {
-      console.error("Error al obtener los productos por categoría de producto:", error);
-      return new ErrorService.InternalServerError("Error al obtener los productos por categoría de producto");
+      console.error("Error al obtener la categoría de producto:", error);
+      throw new ErrorService.InternalServerError("Error al obtener la categoría de producto.");
     }
   },
 };
