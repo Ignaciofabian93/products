@@ -26,12 +26,6 @@ enum BusinessSubscriptionPlan {
   EXPERT
 }
 
-enum AccountType {
-  FREE
-  PLUS
-  PREMIUM
-}
-
 // Platform admins vs Business admins
 enum AdminType {
   PLATFORM // Ekoru staff members
@@ -149,13 +143,6 @@ enum BusinessType {
   RETAIL
   SERVICES
   MIXED
-}
-
-enum BusinessFormalizationStatus {
-  NOT_REQUIRED
-  PENDING
-  IN_PROGRESS
-  FORMALIZED
 }
 
 enum ChileanPaymentProvider {
@@ -479,14 +466,9 @@ model Seller {
   website                String?
   preferredContactMethod ContactMethod? @default(WHATSAPP)
   socialMediaLinks       Json?
-  accountType            AccountType?   @default(FREE)
   points                 Int            @default(0)
   sellerLevelId          Int?
   sellerCategoryId       Int?
-
-  // Multi-country support
-  locale   String @default("es-CL") // Language and regional preferences
-  timezone String @default("America/Santiago") // User's timezone
 
   // Profile Relations - Each seller has ONE profile based on sellerType
   personProfile   PersonProfile? // For PERSON type
@@ -578,17 +560,18 @@ model SellerLevel {
 }
 
 model PersonProfile {
-  id             String    @id @default(uuid())
-  sellerId       String    @unique
-  firstName      String
-  lastName       String?
-  displayName    String?
-  bio            String?
-  birthday       DateTime?
-  profileImage   String?
-  coverImage     String?
-  allowExchanges Boolean   @default(true) // Only PERSON users can exchange
-  seller         Seller    @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  id                     String                 @id @default(uuid())
+  sellerId               String                 @unique
+  firstName              String
+  lastName               String?
+  displayName            String?
+  bio                    String?
+  birthday               DateTime?
+  profileImage           String?
+  coverImage             String?
+  allowExchanges         Boolean                @default(true) // Only PERSON users can exchange
+  personSubscriptionPlan PersonSubscriptionPlan @default(FREEMIUM)
+  seller                 Seller                 @relation(fields: [sellerId], references: [id], onDelete: Cascade)
 }
 
 model BusinessProfile {
@@ -597,7 +580,6 @@ model BusinessProfile {
 
   // Basic Information
   businessName String // Nombre comercial
-  displayName  String? // Display name for the platform
   description  String?
   logo         String?
   coverImage   String?
@@ -606,18 +588,9 @@ model BusinessProfile {
   // Chilean Legal Requirements
   legalBusinessName        String? // Razón Social (legal business name)
   taxId                    String?   @unique // RUT - Rol Único Tributario (Chilean Tax ID)
-  businessActivity         String? // Giro (business activity/sector)
   businessStartDate        DateTime? // Inicio de Actividades (SII registration date)
   legalRepresentative      String? // Representante Legal (legal representative name)
   legalRepresentativeTaxId String? // RUT of legal representative
-
-  // Formalization Status (for STARTUP type)
-  formalizationStatus   BusinessFormalizationStatus @default(NOT_REQUIRED)
-  formalizationDeadline DateTime? // For startups: deadline to formalize
-  formalizationNotes    String? // Notes about formalization process
-
-  // Business Operations (exchanges not allowed for businesses)
-  minOrderAmount Int?
 
   // For RETAIL and MIXED
   shippingPolicy String?
@@ -626,27 +599,19 @@ model BusinessProfile {
   // For SERVICES and MIXED
   serviceArea       String?
   yearsOfExperience Int?
-  licenseNumber     String?
-  insuranceInfo     String?
   certifications    String[]
-  emergencyService  Boolean  @default(false)
   travelRadius      Int? // In kilometers
 
   // Operating Hours
   businessHours Json? // Store/service hours
 
-  // Additional Info
-  taxDocuments          String[] // URLs to uploaded documents
-  verificationDocuments String[] // Documents for verification
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  seller Seller @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  createdAt                DateTime                 @default(now())
+  updatedAt                DateTime                 @updatedAt
+  businessSubscriptionPlan BusinessSubscriptionPlan @default(FREEMIUM)
+  seller                   Seller                   @relation(fields: [sellerId], references: [id], onDelete: Cascade)
 
   @@index([taxId])
   @@index([businessType])
-  @@index([formalizationStatus])
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
