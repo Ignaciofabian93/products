@@ -55,6 +55,7 @@ export const CatalogService = {
           category: "asc",
         },
       });
+      console.log("store catalog:: ", storeCatalog);
 
       if (!storeCatalog.length) {
         return new ErrorService.NotFoundError("No se encontraron categorías de tienda");

@@ -173,13 +173,13 @@ export const typeDefs = gql`
     id: ID!
     category: String!
     subcategories: [StoreSubCategory!]!
-    products: StoreProductConnection!
+    products: StoreProductConnection
   }
 
   type StoreSubCategory @key(fields: "id") {
     id: ID!
-    storeCategoryId: Int!
-    subcategory: String!
+    storeCategoryId: Int
+    subCategory: String!
     storeCategory: StoreCategory
     products: StoreProductConnection
     productCount: Int
