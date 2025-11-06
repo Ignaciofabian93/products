@@ -110,6 +110,7 @@ export const typeDefs = gql`
     departmentImage: String
     departmentCategory: [DepartmentCategory!]!
     products: ProductConnection!
+    href: String
   }
 
   type DepartmentCategory @key(fields: "id") {
@@ -119,6 +120,7 @@ export const typeDefs = gql`
     department: Department
     productCategory: [ProductCategory!]!
     products: ProductConnection!
+    href: String
   }
 
   type ProductCategory @key(fields: "id") {
@@ -132,6 +134,7 @@ export const typeDefs = gql`
     products: ProductConnection!
     departmentCategory: DepartmentCategory
     materials: [ProductCategoryMaterial]
+    href: String
   }
 
   type ProductCategoryMaterial {
@@ -174,6 +177,7 @@ export const typeDefs = gql`
     category: String!
     subcategories: [StoreSubCategory!]!
     products: StoreProductConnection
+    href: String
   }
 
   type StoreSubCategory @key(fields: "id") {
@@ -183,6 +187,7 @@ export const typeDefs = gql`
     storeCategory: StoreCategory
     products: StoreProductConnection
     productCount: Int
+    href: String
   }
 
   type StoreProductMaterial @key(fields: "id") {

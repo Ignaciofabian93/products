@@ -9,14 +9,18 @@ export const CatalogService = {
         select: {
           id: true,
           departmentName: true,
+          href: true,
           departmentCategory: {
             select: {
               id: true,
               departmentCategoryName: true,
+              href: true,
               productCategory: {
                 select: {
                   id: true,
                   productCategoryName: true,
+                  departmentCategoryId: true,
+                  href: true,
                 },
               },
             },
@@ -44,6 +48,7 @@ export const CatalogService = {
         select: {
           id: true,
           category: true,
+          href: true,
           subcategories: {
             select: {
               id: true,
@@ -55,7 +60,6 @@ export const CatalogService = {
           category: "asc",
         },
       });
-      console.log("store catalog:: ", storeCatalog);
 
       if (!storeCatalog.length) {
         return new ErrorService.NotFoundError("No se encontraron categorías de tienda");

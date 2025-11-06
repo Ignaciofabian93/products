@@ -39,16 +39,7 @@ export type ProductCategory = {
   size?: ProductSize | null;
   weightUnit?: WeightUnit | null;
   averageWeight?: number | null;
-  firstMaterialTypeId?: number | null;
-  firstMaterialTypeQuantity?: number | null;
-  secondMaterialTypeId?: number | null;
-  secondMaterialTypeQuantity?: number | null;
-  thirdMaterialTypeId?: number | null;
-  thirdMaterialTypeQuantity?: number | null;
-  fourthMaterialTypeId?: number | null;
-  fourthMaterialTypeQuantity?: number | null;
-  fifthMaterialTypeId?: number | null;
-  fifthMaterialTypeQuantity?: number | null;
+  href?: string | null;
 };
 
 export type MaterialImpactEstimate = {
@@ -62,12 +53,14 @@ export type DepartmentCategory = {
   id: number;
   departmentCategoryName: string;
   departmentId: number;
+  href?: string | null;
 };
 
 export type Department = {
   id: number;
   departmentName: string;
   departmentImage?: string | null;
+  href?: string | null;
 };
 
 export type ProductVariant = {
