@@ -57,9 +57,9 @@ export const MarketplaceService = {
     sellerId,
   }: { departmentCategoryId: number } & Context) => {
     try {
-      // if (!sellerId) {
-      //   throw new ErrorService.UnAuthorizedError("No autorizado.");
-      // }
+      if (!sellerId) {
+        throw new ErrorService.UnAuthorizedError("No autorizado.");
+      }
 
       const parsedId = Number(departmentCategoryId);
       const productCategories = await prisma.productCategory.findMany({
