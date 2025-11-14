@@ -1,6 +1,6 @@
 import prisma from "../../client/prisma";
 import { ErrorService } from "../../errors/errors";
-import { Context } from "../../types/context";
+// import { Context } from "../../types/context";
 import { AddProductInput, UpdateProductInput } from "../resolvers/product";
 import { calculatePrismaParams, createPaginatedResponse } from "../../utils/pagination";
 

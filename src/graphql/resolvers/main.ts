@@ -13,11 +13,11 @@ export const MainResolver = {
     ...MarketplaceResolver.Query,
     ...StoreResolver.Query,
   },
-  // Mutation: {
-  //   ...ProductResolver.Mutation,
-  //   ...StoreProductResolver.Mutation,
-  // },
-  // Product: {
-  //   ...ProductResolver.Product,
-  // },
+  Mutation: {
+    ...ProductResolver.Mutation,
+    // ...StoreProductResolver.Mutation,
+  },
+  Product: {
+    ...ProductResolver.Product,
+  },
 };
