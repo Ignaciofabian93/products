@@ -1,9 +1,7 @@
 import { Context } from "../../types/context";
 import { type Badge, type ProductCondition } from "../../types/enums";
-import { DepartmentCategoriesService } from "../services/departmentCategories";
-import { DepartmentService } from "../services/departments";
 import { ProductService } from "../services/product";
-import { ProductCategoriesService } from "../services/productCategories";
+import { MaterialImpactsService } from "../services/materialImpacts";
 
 export type AddProductInput = {
   sku: string;
@@ -56,8 +54,8 @@ export type UpdateProductInput = {
 };
 
 export type PaginationArgs = {
-  take: number;
-  skip: number;
+  page?: number;
+  pageSize?: number;
   orderBy?: { field: string; direction: "asc" | "desc" };
 };
 
@@ -71,14 +69,56 @@ export type FeedProductsArgs = {
 export const ProductResolver = {
   Query: {
     getProduct: (_parent: unknown, args: { id: string }) => ProductService.getProduct({ id: Number(args.id) }),
-    getProducts: (_parent: unknown, args: PaginationArgs) => ProductService.getProducts({ ...args }),
-    getProductsBySeller: (_parent: unknown, args: { sellerId: string } & PaginationArgs) =>
-      ProductService.getProductsByOwner({ ...args }),
+    getProducts: (_parent: unknown, args: { page?: number; pageSize?: number; isActive?: boolean }) =>
+      ProductService.getProducts(args),
+    getProductsBySeller: (
+      _parent: unknown,
+      args: { sellerId: string; page?: number; pageSize?: number; isActive?: boolean },
+    ) => ProductService.getProductsByOwner(args),
+    getProductsByCategory: (
+      _parent: unknown,
+      args: { productCategoryId: string; page?: number; pageSize?: number; isActive?: boolean },
+    ) =>
+      ProductService.getProductsByCategory({
+        productCategoryId: Number(args.productCategoryId),
+        page: args.page,
+        pageSize: args.pageSize,
+        isActive: args.isActive,
+      }),
+    getExchangeableProducts: (_parent: unknown, args: { page?: number; pageSize?: number }) =>
+      ProductService.getExchangeableProducts(args),
   },
   Mutation: {
-    // TODO: Fix these mutations - they need context
-    // addProduct: (_parent: unknown, args: { input: AddProductInput }) => ProductService.addProduct(args),
-    // updateProduct: (_parent: unknown, args: { input: UpdateProductInput }) => ProductService.updateProduct(args),
+    addProduct: (_parent: unknown, args: { input: AddProductInput }, context: Context) =>
+      ProductService.addProduct({ input: args.input, sellerId: context.sellerId }),
+    updateProduct: (_parent: unknown, args: { input: UpdateProductInput }, context: Context) =>
+      ProductService.updateProduct({ input: args.input, sellerId: context.sellerId }),
     deleteProduct: (_parent: unknown, args: { id: string }) => ProductService.deleteProduct({ id: Number(args.id) }),
+    toggleProductActive: (_parent: unknown, args: { id: string }, context: Context) =>
+      ProductService.toggleProductActive({ id: Number(args.id), sellerId: context.sellerId }),
+  },
+  Product: {
+    // Resolve productCategory relationship
+    productCategory: async (parent: { productCategoryId: number }) => {
+      try {
+        // return await ProductCategoriesService.getProductCategory({ id: parent.productCategoryId });
+      } catch (error) {
+        console.error("Error resolving productCategory:", error);
+        return null;
+      }
+    },
+    // Resolve seller relationship (federated)
+    seller: (parent: { sellerId: string }) => {
+      return { __typename: "Seller", id: parent.sellerId };
+    },
+    // Calculate environmental impact
+    environmentalImpact: async (parent: { productCategoryId: number }) => {
+      try {
+        return await MaterialImpactsService.calculateCategoryImpact(parent.productCategoryId);
+      } catch (error) {
+        console.error("Error calculating environmental impact:", error);
+        return null;
+      }
+    },
   },
 };

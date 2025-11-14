@@ -8,3 +8,8 @@ export type PaginationProps = {
   skip: number;
   orderBy?: OrderBy;
 };
+
+export type PaginationInput = {
+  page?: number;
+  pageSize?: number;
+};

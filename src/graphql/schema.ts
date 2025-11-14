@@ -131,19 +131,21 @@ export const typeDefs = gql`
     size: ProductSize
     averageWeight: Float
     weightUnit: WeightUnit
-    products: ProductConnection!
+    products: ProductConnection
     departmentCategory: DepartmentCategory
     materials: [ProductCategoryMaterial]
     href: String
   }
 
-  type ProductCategoryMaterial {
+  type ProductCategoryMaterial @key(fields: "id") {
     id: ID!
     productCategoryId: Int!
-    materialTypeId: ID!
+    materialTypeId: Int!
     quantity: Float!
     unit: String!
     isPrimary: Boolean!
+    createdAt: DateTime
+    updatedAt: DateTime
     productCategory: ProductCategory
     material: MaterialImpactEstimate
   }
@@ -170,6 +172,21 @@ export const typeDefs = gql`
     conditionDescription: String
     productCategory: ProductCategory
     seller: Seller
+    environmentalImpact: EnvironmentalImpact
+  }
+
+  type EnvironmentalImpact {
+    totalCo2SavingsKG: Float!
+    totalWaterSavingsLT: Float!
+    materialBreakdown: [MaterialImpactBreakdown!]!
+  }
+
+  type MaterialImpactBreakdown {
+    materialType: String!
+    percentage: Float!
+    weightKG: Float!
+    co2SavingsKG: Float!
+    waterSavingsLT: Float!
   }
 
   type StoreCategory @key(fields: "id") {
@@ -188,6 +205,7 @@ export const typeDefs = gql`
     products: StoreProductConnection
     productCount: Int
     href: String
+    materials: [StoreProductMaterial]
   }
 
   type StoreProductMaterial @key(fields: "id") {
@@ -236,7 +254,6 @@ export const typeDefs = gql`
     productVariants: [ProductVariant!]!
     storeSubCategory: StoreSubCategory
     seller: Seller
-    materials: [StoreProductMaterial!]!
   }
 
   type ProductLike {
@@ -403,7 +420,12 @@ export const typeDefs = gql`
     storeCatalog: [StoreCategory]
 
     # Marketplace Queries
-    getDepartment(id: ID!): Department
+    getDepartments: [Department!]
+    getDepartmentCategoriesByDepartmentId(departmentId: ID!): [DepartmentCategory!]
+    getProductCategoriesByDepartmentCategoryId(departmentCategoryId: ID!): [ProductCategory!]
+
+    getDepartment(id: ID!, page: Int = 1, pageSize: Int = 10): Department
+    getDepartmentCategory(id: ID!, page: Int = 1, pageSize: Int = 10): DepartmentCategory
     getDepartmentCategories(departmentId: ID!, page: Int = 1, pageSize: Int = 10): DepartmentCategoryConnection
     getProductCategory(id: ID!): ProductCategory
     getProductCategories(departmentCategoryId: ID!, page: Int = 1, pageSize: Int = 10): ProductCategoryConnection
@@ -421,7 +443,10 @@ export const typeDefs = gql`
     getExchangeableProducts(page: Int = 1, pageSize: Int = 10): ProductConnection
 
     # Store Queries
-    getStoreCategory(id: ID!): StoreCategory
+    getStoreCategories: [StoreCategory!]
+    getStoreSubCategoriesByCategoryId(storeCategoryId: ID!): [StoreSubCategory!]
+
+    getStoreCategory(id: ID!, page: Int = 1, pageSize: Int = 10): StoreCategory
     getStoreSubCategories(storeCategoryId: ID!, page: Int = 1, pageSize: Int = 10): StoreSubCategoryConnection
     getStoreSubCategory(id: ID!): StoreSubCategory
 
@@ -449,6 +474,7 @@ export const typeDefs = gql`
     getMaterialImpacts: [MaterialImpactEstimate!]!
     getCo2ImpactMessages: [Co2ImpactMessage!]!
     getWaterImpactMessages: [WaterImpactMessage!]!
+    calculateProductImpact(productCategoryId: ID!): EnvironmentalImpact
   }
 
   extend type Mutation {

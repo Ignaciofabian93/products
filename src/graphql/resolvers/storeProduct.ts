@@ -1,10 +1,5 @@
 import { StoreProductService } from "../services/storeProduct";
 
-export type PaginationInput = {
-  page?: number;
-  pageSize?: number;
-};
-
 export const StoreProductResolver = {
   Query: {
     // Store queries - returns category with subcategories and products
