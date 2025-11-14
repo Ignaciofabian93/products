@@ -1,5 +1,6 @@
 import prisma from "../../client/prisma";
 import { ErrorService } from "../../errors/errors";
+import { ProductCategoryMaterial } from "../../types/product";
 
 export const MaterialImpactsService = {
   /**
@@ -110,7 +111,7 @@ export const MaterialImpactsService = {
       let totalCo2SavingsKG = 0;
       let totalWaterSavingsLT = 0;
 
-      const materialBreakdown = category.materials.map((mat) => {
+      const materialBreakdown = category.materials.map((mat: ProductCategoryMaterial) => {
         // Calculate weight of this material in the product
         const materialWeightKG = mat.unit === "percentage" ? (averageWeight * mat.quantity) / 100 : mat.quantity;
 

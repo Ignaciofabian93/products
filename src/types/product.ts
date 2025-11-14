@@ -1,5 +1,17 @@
 import { type Badge, type ProductSize, type WeightUnit, type ProductCondition } from "./enums";
 
+export type ProductCategoryMaterial = {
+  id: number;
+  productCategoryId: number;
+  materialTypeId: number;
+  quantity: number;
+  unit: string;
+  isPrimary: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  material: MaterialImpactEstimate;
+};
+
 export type Product = {
   id: number;
   sku?: string | null;
